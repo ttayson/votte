@@ -1,0 +1,75 @@
+//MOdulos
+const express = require('express')
+const handlebars = require('express-handlebars')
+const Handlebars = require('handlebars')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
+
+const bodyParser = require('body-parser')
+const session = require('express-session')
+const flash = require('connect-flash')
+const path = require('path')
+
+const admin = require("./routes/admin")
+
+// Banco de Dados
+const mongoose = require('mongoose')
+
+const app = express()
+
+const hbs = handlebars.create({
+    defaultLayout: 'main', 
+    extname: 'hbs',
+    handlebars: allowInsecurePrototypeAccess(Handlebars)
+  });
+
+
+//Configurações
+    //session
+    app.use(session({
+        secret: "aplicativovotta",
+        resave: true,
+        saveUninitialized: true
+    }))
+
+    app.use(flash())
+
+    //middleware
+
+    app.use((req, res, next) =>{
+        res.locals.success_msg = req.flash("success_msg")
+        res.locals.error_msg = req.flash("error_msg")
+        next()
+    })
+
+    //body parser
+    app.use(bodyParser.urlencoded({extended: true}))
+    app.use(bodyParser.json())
+    
+    //Handlebars
+
+    app.engine('hbs', hbs.engine); 
+    app.set('view engine', 'hbs');
+    app.set('views', 'views');
+    // app.engine('handlebars', handlebars({defaultLayout: 'main'}))
+    // app.set('view engine', 'handlebars');
+
+    //mongoose
+    mongoose.Promise = global.Promise;
+    mongoose.connect("mongodb://localhost/votta2").then(() => {
+        console.log("Mongo Conectado")    
+    }).catch((err) => {
+        console.log("Erro ao se conectar ao banco:"+err)        
+    });
+    //Public
+    app.use(express.static(path.join(__dirname,"public")))
+
+
+// Rotas
+
+app.use("/admin", admin)
+
+
+const PORT = 8081
+app.listen(PORT, () =>{
+    console.log('Servidor Rodando!!')
+})
