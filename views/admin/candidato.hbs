@@ -78,24 +78,19 @@
                     <td>{{cargo}}</td>
                     <td>{{descricao}}</td>
 					<td>
-						<div class="flex-container">
-							<div class="p-2">
 								<a href="/admin/candidato/edit/{{id}}">
 									<button type="button" class="btn btn-primary btn-sm">
 									<span class="fa fa-cog">&nbsp;</span>
 									</button>
 								</a>
-							</div>
-							<div class="p-2">
-								<form action="/admin/candidato/del" method="POST">
+
+								<form action="/admin/candidato/del" method="POST"style="display: inline-block;">
 									<input type="hidden" name="id" value="{{_id}}">
 									<button type="submit" class="btn btn-danger btn-sm"><span class="fa fa fa-trash-o">&nbsp;</span></button>
 								</form>
-							</div>
-							<div class="p-2">
-								<button type="button" class="btn btn-success btn-sm"><span class="fa fa fa-lock">&nbsp;</span></button>
-							</div>
-						</div>
+
+								{{!-- <button type="button" class="btn btn-success btn-sm"><span class="fa fa fa-lock">&nbsp;</span></button> --}}
+
 
 					</td>
 

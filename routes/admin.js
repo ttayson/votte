@@ -39,13 +39,22 @@ router.get('/candidato', (req, res) => {
     
 })
 
+router.post('/candidato/del', (req, res) => {
+    Candidato.remove({_id:req.body.id}).then(() => {
+        res.redirect("/admin/candidato")
+        console.log("Candidato exluído")
+    }).catch((err)=>{
+        console.log("Erro ao procurar candidato")
+    })
+})
+
+
 router.get('/candidato/edit/:id', (req, res) => {
     Candidato.findOne({_id:req.params.id}).then((candidato) =>{
         res.render("admin/candidatoedit", {candidato: candidato})
     }).catch((err)=>{
         console.log("Erro ao procurar candidato")
     })
-    
 })
 
 router.post('/candidato/edit', (req, res) => {
@@ -77,6 +86,7 @@ router.post('/candidato/edit', (req, res) => {
         candidato.save().then(() =>{
             console.log("Edição de candidato Realizada")
             res.redirect("/admin/candidato")
+            
         }).catch((err) => {
             console.log("Erro ao editar candidato")
         })
@@ -119,6 +129,7 @@ router.post("/novocandidato/add", (req, res) => {
     
         new Candidato(novoCandidato).save().then(() => {
             console.log("Candidato Salvo com Sucesso")
+            res.redirect("/admin/candidato")
         }).catch((err) => {
             console.log("Erro ao Salvar no Banco (Candidato)")
         });
