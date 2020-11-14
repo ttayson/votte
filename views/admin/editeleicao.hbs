@@ -37,17 +37,17 @@
 				<li><a href="/admin">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Cadastro de Candidato</li>
+				<li class="active">Editar Eleição</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Novo Candidato</h1>
+				<h1 class="page-header">Editar Eleição</h1>
 			</div>
 		</div><!--/.row-->
 
-		<a href="/admin/candidato" class="btn btn-primary" role="button">Voltar</a>
+		<a href="/admin/eleicao" class="btn btn-primary" role="button">Voltar</a>
 		<br>
 		<br>
 		
@@ -60,26 +60,16 @@
 
 				{{/each}}
 				
-			<form class="form-horizontal" action="/admin/novocandidato/add" method="POST">
+			<form class="form-horizontal" action="/admin/eleicao/edit" method="POST">
 			<div class="form-group">
-				<label for="nome" class="control-label col-xs-4">Nome do Candidato</label> 
+				<input type="hidden" name="id" value="{{eleicao._id}}">
+				<label for="nome" class="control-label col-xs-4">Nome do Pleito</label> 
 				<div class="col-xs-8">
 				<div class="input-group">
 					<div class="input-group-addon">	
 					<i class="fa fa-address-card"></i>
 					</div> 
-					<input id="nome" name="nome" placeholder="Candidado" type="text" class="form-control">
-				</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="matricula" class="control-label col-xs-4">Matrícula</label> 
-				<div class="col-xs-8">
-				<div class="input-group">
-					<div class="input-group-addon">
-					<i class="fa fa-address-book-o"></i>
-					</div> 
-					<input id="matricula" name="matricula" placeholder="Matrícula" type="text" class="form-control">
+					<input id="nome" name="nome" placeholder="Eleição" type="text" class="form-control" value="{{eleicao.nome}}">
 				</div>
 				</div>
 			</div>
@@ -90,21 +80,46 @@
 					<div class="input-group-addon">
 					<i class="fa fa-500px"></i>
 					</div> 
-					<input id="cargo" name="cargo" placeholder="Cargo" type="text" class="form-control">
+					<input id="cargo" name="cargo" placeholder="Cargo" type="text" class="form-control" value="{{eleicao.cargo}}">
 				</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="descricao" class="control-label col-xs-4">Descrição do Candidato</label> 
+				<label for="descricao" class="control-label col-xs-4">Descrição da Eleição</label> 
 				<div class="col-xs-8">
-				<textarea id="descricao" name="descricao" cols="40" rows="5" class="form-control"></textarea>
+				<textarea id="descricao" name="descricao" cols="40" rows="5" class="form-control">{{eleicao.descricao}}</textarea>
 				</div>
 			</div> 
+			
+			<div class="form-group">
+				<label for="checkbox" class="control-label col-xs-4">Candidatos</label> 
+				<div class="col-xs-8">
+			
+			{{#each candidato}}
+
+				<div class="checkbox">
+					<label class="checkbox">
+					<input type="checkbox" name="candidatos" value="{{_id}}">
+						{{nome}}
+					</label>
+				</div>
+
+	
+			{{else}}
+				<p>Não existem candidatos cadastrados</p>
+			{{/each}}
+
+
+				</div>
+			</div> 
+
 			<div class="form-group row">
 				<div class="col-xs-offset-4 col-xs-8">
-				<button name="submit" type="submit" class="btn btn-primary">Cadastrar</button>
+				<button name="submit" type="submit" class="btn btn-primary">Editar</button>
 				</div>
 			</div>
+
+
 			</form>
 
 			</div>

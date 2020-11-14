@@ -37,17 +37,17 @@
 				<li><a href="/admin">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Candidatos</li>
+				<li class="active">Eleição</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Lista de Candidatos</h1>
+				<h1 class="page-header">Lista de Eleições</h1>
 			</div>
 		</div><!--/.row-->
 
-		<a href="/admin/novocandidato" class="btn btn-primary" role="button">Novo Candidato</a>
+		<a href="/admin/novaeleicao" class="btn btn-primary" role="button">Nova Eleição</a>
 		<br>
 		<br>
 
@@ -62,29 +62,36 @@
 					<thead>
 					<tr>
 					<th scope="col" >Nome</th>
-					<th scope="col">Matrícula</th>
 					<th scope="col">Cargo</th>
+					<th scope="col">Candidatos</th>
 					<th scope="col">Descrição</th>
+					<th scope="col">Status</th>
 					<th scope="col">Ação</th>
 					</tr>
 
 					</thead>
 					<tbody>
-                  {{#each candidato}}
+                  {{#each eleicao}}
                   <tr>
                     
                     <td>{{nome}}</td>
-                    <td>{{matricula}}</td>
-                    <td>{{cargo}}</td>
-                    <td>{{descricao}}</td>
+					<td>{{cargo}}</td>
 					<td>
-								<a href="/admin/candidato/edit/{{id}}">
-									<button type="button" class="btn btn-primary btn-sm">
-									<span class="fa fa-cog">&nbsp;</span>
+					{{#each candidatos}}
+					<button type="button" class="btn btn-info btn-sm">{{nome}}</button><br>
+					{{else}}
+                	{{/each}} 
+					</td>
+                    <td>{{descricao}}</td>
+					<td>{{status}}</td>
+					<td>
+								<a href="/admin/eleicao/edit/{{id}}">
+									<button type="button"  class="btn btn-primary btn-sm">
+									<span class="fa fa-pencil">&nbsp;</span>
 									</button>
 								</a>
 
-								<form action="/admin/candidato/del" method="POST"style="display: inline-block;">
+								<form action="/admin/eleicao/edit/del" method="POST"style="display: inline-block;">
 									<input type="hidden" name="id" value="{{_id}}">
 									<button type="submit" class="btn btn-danger btn-sm"><span class="fa fa fa-trash-o">&nbsp;</span></button>
 								</form>
@@ -105,12 +112,10 @@
 
               </table>
               </div>
-            </div>
+            	</div>
 
 			</div>
 			</div>
-
-
-		
+               		
 	
 	</div>	<!--/.main-->

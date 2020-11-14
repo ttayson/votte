@@ -56,18 +56,22 @@
 
 
 						<div class="row">
+							{{#each eleicao}}
 							<div class="col-sm-6 col-md-3">
 								<div class="thumbnail">
 								<img data-src="holder.js/100%x200" alt="100%x200" src="https://img.ibxk.com.br/2019/06/11/11185614846206.jpg" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
 								<div class="caption">
-									<h3>Votação para Conselho</h3>
-									<p>Escolha do presidente do conselho</p>
-									<p><a href="#" class="btn btn-primary" role="button">Votar</a> <a href="#" class="btn btn-default" role="button">Editar</a></p>
+									<h3>{{nome}}</h3>
+									<p> Cargo: {{cargo}}</p>
+									<p> Descrição: {{descricao}}</p>
+									<p><a href="#" class="btn btn-primary" role="button">Editar</a> <a href="#" class="btn btn-default" role="button">iniciar</a></p>
 								</div>
 								</div>
 							</div>
-
-							</div>
+							{{else}}
+								<h2>Nenhuma Eleição Cadastrada</h2>
+							{{/each}}
+						</div>
 
 			</div>
             
