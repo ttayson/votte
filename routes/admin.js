@@ -55,8 +55,9 @@ router.get('/eleicao/edit/:id', (req, res) => {
 
 router.post('/eleicao/edit/del/', (req, res) => {
     Eleicao.remove({_id:req.body.id}).then(() =>{
-        res.redirect("/admin/eleicao")
-        console.log("Eleição removida")
+        // res.redirect("/admin/eleicao")
+        res.json({ ok: "deletok"})
+
     }).catch((err)=>{
         console.log("Erro ao procurar eleição")
     })

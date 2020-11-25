@@ -86,19 +86,22 @@
 					<td>{{status}}</td>
 					<td>
 								<a href="/admin/eleicao/edit/{{id}}">
-									<button type="button"  class="btn btn-primary btn-sm">
+									<button type="button" id="{{_id}}" onclick="teste('{{id}}')" class="btn btn-primary btn-sm">
 									<span class="fa fa-pencil">&nbsp;</span>
 									</button>
 								</a>
 
-								<form action="/admin/eleicao/edit/del" method="POST"style="display: inline-block;">
-									<input type="hidden" name="id" value="{{_id}}">
-									<button type="submit" class="btn btn-danger btn-sm"><span class="fa fa fa-trash-o">&nbsp;</span></button>
-								</form>
+								<span class="btn btn-danger btn-sm" onclick="deletar('{{id}}')">
+									<input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
+									<i class="fa fa fa-trash-o"></i>
+								</span>
 
-								{{!-- <button type="button" class="btn btn-success btn-sm"><span class="fa fa fa-lock">&nbsp;</span></button> --}}
+								<span class="btn btn-success btn-sm" onclick="teste('{{id}}')">
+									<input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
+									<i class="fa fa fa-trash-o"></i>
+								</span>
 
-
+								
 					</td>
 
                   </tr>
@@ -119,3 +122,50 @@
                		
 	
 	</div>	<!--/.main-->
+
+	<script>
+
+		function deletar(id) {
+                    Swal.fire({
+                      title: 'Deseja deletar?',
+                      text: "",
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#3085d6',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Sim'
+                    }).then((result) => {
+                      if (result.value) {
+                        var form = $('#typedel-'+id);
+                        $.ajax({
+                          url:'/admin/eleicao/edit/del',
+                          method:'POST',
+                          data: $(form).serialize()
+                        })
+                        .done(function(retorno){
+	  
+                           if (retorno.ok == "deletok"){
+							    msg()
+							    async function msg(){
+
+									await Swal.fire({
+										position: 'top-end',
+										icon: 'success',
+										title: 'Deletado',
+										showConfirmButton: false,
+										timer: 1500
+									})
+
+									location.reload();
+
+							   }
+                            
+                            
+
+                           
+                          }
+                      })
+                      }  
+                    })
+                }
+	</script>
