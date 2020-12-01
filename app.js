@@ -55,7 +55,10 @@ const hbs = handlebars.create({
 
     //mongoose
     mongoose.Promise = global.Promise;
-    mongoose.connect("mongodb://localhost/votta2").then(() => {
+    mongoose.connect("mongodb://localhost/votta2", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }).then(() => {
         console.log("Mongo Conectado")    
     }).catch((err) => {
         console.log("Erro ao se conectar ao banco:"+err)        

@@ -71,51 +71,56 @@
 
 					</thead>
 					<tbody>
-                  {{#each eleicao}}
-                  <tr>
-                    
-                    <td>{{nome}}</td>
-					<td>{{cargo}}</td>
-					<td>
-					{{#each candidatos}}
-					<button type="button" class="btn btn-info btn-sm">{{nome}}</button><br>
+					{{#each eleicao}}
+					<tr>
+						
+							<td>{{nome}}</td>
+							<td>{{cargo}}</td>
+							<td>
+							{{#each candidatos}}
+							<button type="button" class="btn btn-info btn-sm">{{nome}}</button><br>
+							{{else}}
+							{{/each}} 
+							</td>
+												<td>{{descricao}}</td>
+							<td>{{status}}</td>
+							<td >
+
+								<div style="display: flex;">
+										<span class="btn btn-primary btn-sm" onclick="window.location='/admin/eleicao/edit/{{id}}'">
+											<input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
+											<i class="fa fa-pencil"></i>
+										</span>
+
+										<span class="btn btn-danger btn-sm" onclick="deletar('{{id}}')">
+											<input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
+											<i class="fa fa fa-trash-o"></i>
+										</span>
+
+										<span class="btn btn-success btn-sm" onclick="iniciar('{{id}}')">
+											<input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
+											<i class="fa fa-hourglass-start"></i>
+										</span>
+
+								</div>
+
+
+
+										
+							</td>
+
+					</tr>
+
 					{{else}}
-                	{{/each}} 
-					</td>
-                    <td>{{descricao}}</td>
-					<td>{{status}}</td>
-					<td>
-								<a href="/admin/eleicao/edit/{{id}}">
-									<button type="button" id="{{_id}}" onclick="teste('{{id}}')" class="btn btn-primary btn-sm">
-									<span class="fa fa-pencil">&nbsp;</span>
-									</button>
-								</a>
+	
 
-								<span class="btn btn-danger btn-sm" onclick="deletar('{{id}}')">
-									<input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
-									<i class="fa fa fa-trash-o"></i>
-								</span>
+					{{/each}} 
+						
+					</tbody>
 
-								<span class="btn btn-success btn-sm" onclick="teste('{{id}}')">
-									<input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
-									<i class="fa fa fa-trash-o"></i>
-								</span>
-
-								
-					</td>
-
-                  </tr>
-
-                {{else}}
-				
-
-                {{/each}} 
-                  
-                </tbody>
-
-              </table>
-              </div>
-            	</div>
+				</table>
+				</div>
+				</div>
 
 			</div>
 			</div>
@@ -168,4 +173,30 @@
                       }  
                     })
                 }
-	</script>
+		function iniciar(id) {
+
+			const APIstatus = '/admin/eleicao/status/'+id
+
+			const inputValue = fetch(APIstatus)
+			.then(response => response.json())
+			.then(data => {
+				if (data.info == "Não iniciada"){
+					Swal.fire({
+						title: 'Iniciar Eleição',
+						showDenyButton: true,
+						showCancelButton: true,
+						confirmButtonText: `Sim`,
+						denyButtonText: `Não`,
+					}).then((result) => {
+						/* Read more about isConfirmed, isDenied below */
+						if (result.isConfirmed) {
+							Swal.fire('Eleição Iniciada!', '', 'success')
+						} else if (result.isDenied) {
+							Swal.fire('Eleição Não Iniciada', '', 'info')
+						}
+					})
+				}
+			})
+
+		}
+	</script	>

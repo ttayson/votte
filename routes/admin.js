@@ -9,12 +9,14 @@ const Candidato =mongoose.model("candidato")
 const Eleicao =mongoose.model("eleicao")
 
 
-
 const router = express.Router()
 
 
 router.get('/', (req, res) => {
-    res.render("admin/index")
+    Eleicao.find({status:1}).populate("candidatos").then((eleicao) =>{
+        res.render("admin/index", {eleicao: eleicao})
+    })
+
 })
 
 router.get('/emandamento', (req, res) => {
@@ -64,7 +66,6 @@ router.post('/eleicao/edit/del/', (req, res) => {
     
             
 })
-
 
 router.post('/eleicao/edit/', (req, res) => {
     Eleicao.findOne({_id:req.body.id}).then((eleicao) =>{
@@ -119,6 +120,21 @@ router.get('/novaeleicao', (req, res) => {
     })
 })
 
+router.get('/eleicao/status/:id', (req, res) => {
+    Eleicao.findOne({_id:req.params.id}).then((eleicao) =>{
+        if (eleicao.status == 0) {
+            res.json({ info: "Não iniciada"})
+        }else if (eleicao.status == 1){
+            res.json({ info: "Iniciada"})
+        }else if (eleicao.status == 2){
+            res.json({ info: "Pausada"})
+        }else if (eleicao.status == 4){
+            res.json({ info: "Finalizada"})
+        }
+
+    })
+})
+
 router.post('/novaeleicao/add', (req, res) => {
     var erros = []
 
@@ -161,10 +177,11 @@ router.get('/candidato', (req, res) => {
 
 router.post('/candidato/del', (req, res) => {
     Candidato.remove({_id:req.body.id}).then(() => {
-        res.redirect("/admin/candidato")
-        console.log("Candidato exluído")
+        // res.redirect("/admin/eleicao")
+        res.json({ ok: "deletok"})
+
     }).catch((err)=>{
-        console.log("Erro ao procurar candidato")
+        console.log("Erro ao procurar eleição")
     })
 })
 
