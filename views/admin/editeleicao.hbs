@@ -1,7 +1,6 @@
 
 		<ul class="nav menu">
 			<li ><a href="/admin"><em class="fa fa-dashboard">&nbsp;</em> Votar</a></li>
-			<li><a href="/admin/calendar"><em class="fa fa-calendar">&nbsp;</em> Calendário</a></li>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Votações<span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
@@ -18,11 +17,14 @@
 				<em class="fa fa-navicon">&nbsp;</em> Cadastrar<span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-2">
-					<li><a class="" href="/admin/eleicao">
-						<span class="fa fa-arrow-right">&nbsp;</span> Eleição
-					</a></li>
 					<li><a class="" href="/admin/candidato">
 						<span class="fa fa-arrow-right">&nbsp;</span> Candidatos
+					</a></li>					
+					<li><a class="" href="/admin/chapas">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chapas
+					</a></li>
+					<li><a class="" href="/admin/eleicao">
+						<span class="fa fa-arrow-right">&nbsp;</span> Eleição
 					</a></li>
 				</ul>
 			</li>
@@ -92,14 +94,14 @@
 			</div> 
 			
 			<div class="form-group">
-				<label for="checkbox" class="control-label col-xs-4">Candidatos</label> 
+				<label for="checkbox" class="control-label col-xs-4">Chapas</label> 
 				<div class="col-xs-8">
 			
-			{{#each candidato}}
+			{{#each chapa}}
 
 				<div class="checkbox">
 					<label class="checkbox">
-					<input type="checkbox" name="candidatos" value="{{_id}}">
+					<input type="checkbox" name="chapa" value="{{_id}}">
 						{{nome}}
 					</label>
 				</div>

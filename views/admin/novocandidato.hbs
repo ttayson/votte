@@ -1,7 +1,6 @@
 
 		<ul class="nav menu">
 			<li ><a href="/admin"><em class="fa fa-dashboard">&nbsp;</em> Votar</a></li>
-			<li><a href="/admin/calendar"><em class="fa fa-calendar">&nbsp;</em> Calendário</a></li>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Votações<span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
@@ -18,11 +17,15 @@
 				<em class="fa fa-navicon">&nbsp;</em> Cadastrar<span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-2">
-					<li><a class="" href="/admin/eleicao">
-						<span class="fa fa-arrow-right">&nbsp;</span> Eleição
-					</a></li>
+
 					<li><a class="" href="/admin/candidato">
 						<span class="fa fa-arrow-right">&nbsp;</span> Candidatos
+					</a></li>					
+					<li><a class="" href="/admin/chapas">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chapas
+					</a></li>
+					<li><a class="" href="/admin/eleicao">
+						<span class="fa fa-arrow-right">&nbsp;</span> Eleição
 					</a></li>
 				</ul>
 			</li>
@@ -51,7 +54,7 @@
 		<br>
 		<br>
 		
-		<div class="panel panel-container">
+			<div class="panel panel-container" style="display: flex;">
 			<div class="container">
 
 				{{#each erros}}
@@ -79,7 +82,7 @@
 					<div class="input-group-addon">
 					<i class="fa fa-address-book-o"></i>
 					</div> 
-					<input id="matricula" name="matricula" placeholder="Matrícula" type="text" class="form-control">
+					<input id="matricula" name="matricula" placeholder="Matrícula" type="number" class="form-control">
 				</div>
 				</div>
 			</div>

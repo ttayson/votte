@@ -3,17 +3,18 @@ const mongoose = require("mongoose")
 
 require("../models/Candidato")
 require("../models/Eleicao")
+require("../models/Chapa")
 
 const Candidato =mongoose.model("candidato")
-
 const Eleicao =mongoose.model("eleicao")
+const Chapa =mongoose.model("chapa")
 
 
 const router = express.Router()
 
 
 router.get('/', (req, res) => {
-    Eleicao.find({status:1}).populate("candidatos").then((eleicao) =>{
+    Eleicao.find({status:0}).populate("candidatos").then((eleicao) =>{
         res.render("admin/index", {eleicao: eleicao})
     })
 
@@ -27,25 +28,21 @@ router.get('/calendar', (req, res) => {
     res.render("admin/calendar")
 })
 
-router.get('/calendar', (req, res) => {
-    res.render("admin/calendar")
-})
-
 router.get('/finalizadas', (req, res) => {
     res.render("admin/finalizadas")
 })
 
 router.get('/eleicao', (req, res) => {
-    Eleicao.find().populate("candidatos").then((eleicao) =>{
+    Eleicao.find().populate("chapa").then((eleicao) =>{
         res.render("admin/eleicao", {eleicao: eleicao})
     })
     
 })
 
 router.get('/eleicao/edit/:id', (req, res) => {
-    Eleicao.findOne({_id:req.params.id}).populate("candidatos").then((eleicao) =>{
-        Candidato.find().then((candidato) => {
-        res.render("admin/editeleicao", {eleicao: eleicao, candidato: candidato})
+    Eleicao.findOne({_id:req.params.id}).populate("chapa").then((eleicao) =>{
+        Chapa.find().then((chapa) => {
+        res.render("admin/editeleicao", {eleicao: eleicao, chapa: chapa})
     })
 
     }).catch((err)=>{
@@ -69,7 +66,7 @@ router.post('/eleicao/edit/del/', (req, res) => {
 
 router.post('/eleicao/edit/', (req, res) => {
     Eleicao.findOne({_id:req.body.id}).then((eleicao) =>{
-        Candidato.find().then((candidato) => {
+        Chapa.find().then((chapa) => {
 
         var erros = []
 
@@ -81,22 +78,20 @@ router.post('/eleicao/edit/', (req, res) => {
             erros.push({text: "Nome para o cargo inválido"})
         }
 
-        if(!req.body.candidatos || typeof req.body.candidatos == undefined || req.body.candidatos == null){
+        if(!req.body.chapa || typeof req.body.chapa == undefined || req.body.chapa == null){
             erros.push({text: "Selecione pelo menos um candidato"})
         }
         
         if(erros.length > 0){
-            res.render("admin/editeleicao", {erros: erros, eleicao: eleicao, candidato: candidato})
+            res.render("admin/editeleicao", {erros: erros, eleicao: eleicao, chapa: chapa})
 
         }else{
-
-            console.log(eleicao)
 
 
                 eleicao.nome = req.body.nome
                 eleicao.cargo = req.body.cargo
                 eleicao.descricao = req.body.descricao
-                eleicao.candidatos = req.body.candidatos
+                eleicao.chapa = req.body.chapa
 
         
                 eleicao.save().then(() => {
@@ -115,8 +110,8 @@ router.post('/eleicao/edit/', (req, res) => {
 })
 
 router.get('/novaeleicao', (req, res) => {
-    Candidato.find().then((candidatos) => {
-        res.render("admin/novaeleicao", {candidatos: candidatos})
+    Chapa.find().then((chapa) => {
+        res.render("admin/novaeleicao", {chapa: chapa})
     })
 })
 
@@ -145,6 +140,10 @@ router.post('/novaeleicao/add', (req, res) => {
     if(!req.body.cargo || typeof req.body.cargo == undefined || req.body.cargo == null){
         erros.push({text: "Nome para o cargo inválido"})
     }
+
+    if(!req.body.chapa || typeof req.body.chapa == undefined || req.body.chapa == null){
+        erros.push({text: "Selecione pelo menos uma chapa"})
+    }
     
     if(erros.length > 0){
         res.render("admin/novaeleicao", {erros: erros})
@@ -154,7 +153,7 @@ router.post('/novaeleicao/add', (req, res) => {
             nome: req.body.nome,
             cargo: req.body.cargo,
             descricao: req.body.descricao,
-            candidatos: req.body.canditados
+            candidatos: req.body.candidatos
         }
     
         new Eleicao(novaEleicao).save().then(() => {
@@ -184,7 +183,6 @@ router.post('/candidato/del', (req, res) => {
         console.log("Erro ao procurar eleição")
     })
 })
-
 
 router.get('/candidato/edit/:id', (req, res) => {
     Candidato.findOne({_id:req.params.id}).then((candidato) =>{
@@ -276,6 +274,123 @@ router.post("/novocandidato/add", (req, res) => {
 
 
 
+})
+
+router.get("/chapas", (req, res) => {
+    Chapa.find().populate("candidatos").then((chapa) =>{
+        res.render("admin/chapas", {chapa: chapa})
+    })
+})
+
+router.get("/novachapa", (req, res) => {
+    Candidato.find().then((candidatos) => {
+        res.render("admin/novachapa", {candidatos: candidatos})
+    })    
+})
+
+router.post('/novachapa/add', (req, res) => {
+    var erros = []
+
+    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
+        erros.push({text: "Nome para chapa inválido"})
+    }
+
+    if(!req.body.candidatos || typeof req.body.candidatos == undefined || req.body.candidatos == null){
+        erros.push({text: "Selecione pelo menos um candidato"})
+    }
+
+    if(!req.body.numero || typeof req.body.numero == undefined || req.body.numero == null){
+        erros.push({text: "Nome para chapa inválido"})
+    }
+
+    if(erros.length > 0){
+        res.render("admin/novachapa", {erros: erros})
+    }else{
+
+        const novaChapa = {
+            nome: req.body.nome,
+            numero: req.body.numero,
+            descricao: req.body.descricao,
+            candidatos: req.body.candidatos
+        }
+    
+        new Chapa(novaChapa).save().then(() => {
+            console.log("Chapa cadastrada com Sucesso")
+            res.redirect("/admin/chapas")
+        }).catch((err) => {
+            console.log("Erro ao Salvar no Banco (Chapa)")
+        });
+
+    }
+    
+})
+
+router.get('/chapas/edit/:id', (req, res) => {
+    Chapa.findOne({_id:req.params.id}).populate("candidatos").then((chapa) =>{
+        Candidato.find().then((candidatos) => {
+        res.render("admin/chapaedit", {chapa: chapa, candidatos: candidatos})
+    })
+
+    }).catch((err)=>{
+        console.log("Erro ao procurar a chapa")
+    })
+})
+
+router.post('/chapas/edit', (req, res) => {
+    Chapa.findOne({_id:req.body.id}).then((chapa) =>{
+        Candidato.find().then((candidatos) => {
+
+        var erros = []
+
+        if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
+            erros.push({text: "Nome para eleição inválido"})
+        }
+
+        if(!req.body.numero || typeof req.body.numero == undefined || req.body.numero == null){
+            erros.push({text: "Número Inválido"})
+        }
+
+
+        if(!req.body.candidatos || typeof req.body.candidatos == undefined || req.body.candidatos == null){
+            erros.push({text: "Selecione pelo menos um candidato"})
+        }
+        
+        if(erros.length > 0){
+            res.render("admin/chapaedit", {erros: erros, chapa: chapa, candidatos: candidatos})
+
+        }else{
+
+                chapa.nome = req.body.nome
+                chapa.numero = req.body.numero
+                chapa.descricao = req.body.descricao
+                chapa.candidatos = req.body.candidatos
+
+        
+                chapa.save().then(() => {
+                    console.log("Chapa editada com Sucesso")
+                    res.redirect("/admin/chapas")
+            }).catch((err) => {
+                    console.log("Erro ao Salvar no Banco (Chapa)")
+            });
+
+        }
+    
+    })
+
+    })
+    
+})
+
+router.post('/chapas/edit/del', (req, res) => {
+    Chapa.remove({_id:req.body.id}).then(() =>{
+        // res.redirect("/admin/eleicao")
+        res.json({ ok: "deletok"})
+
+    }).catch((err)=>{
+        console.log("Erro ao procurar chapa")
+    })
+    
+            
 })
 
 module.exports = router

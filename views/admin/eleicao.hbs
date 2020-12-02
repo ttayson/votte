@@ -1,7 +1,6 @@
 
 		<ul class="nav menu">
 			<li ><a href="/admin"><em class="fa fa-dashboard">&nbsp;</em> Votar</a></li>
-			<li><a href="/admin/calendar"><em class="fa fa-calendar">&nbsp;</em> Calendário</a></li>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Votações<span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
@@ -18,11 +17,14 @@
 				<em class="fa fa-navicon">&nbsp;</em> Cadastrar<span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-2">
-					<li><a class="" href="/admin/eleicao">
-						<span class="fa fa-arrow-right">&nbsp;</span> Eleição
-					</a></li>
 					<li><a class="" href="/admin/candidato">
 						<span class="fa fa-arrow-right">&nbsp;</span> Candidatos
+					</a></li>					
+					<li><a class="" href="/admin/chapas">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chapas
+					</a></li>
+					<li><a class="" href="/admin/eleicao">
+						<span class="fa fa-arrow-right">&nbsp;</span> Eleição
 					</a></li>
 				</ul>
 			</li>
@@ -52,10 +54,10 @@
 		<br>
 
 		    
-			<div class="panel panel-container">
+			<div class="panel panel-container" style="display: flex;">
 			<div class="container">
 			
-				<div class="card-body">
+				<div class="card-body" style="display: grid;">
 				<div class="table-responsive">
 				<table id="tabelacolaboradores" class="table table-bordered table-striped">
 					
@@ -63,7 +65,7 @@
 					<tr>
 					<th scope="col" >Nome</th>
 					<th scope="col">Cargo</th>
-					<th scope="col">Candidatos</th>
+					<th scope="col">Chapa</th>
 					<th scope="col">Descrição</th>
 					<th scope="col">Status</th>
 					<th scope="col">Ação</th>
@@ -71,18 +73,18 @@
 
 					</thead>
 					<tbody>
-					{{#each eleicao}}
-					<tr>
+							{{#each eleicao}}
+							<tr>
 						
 							<td>{{nome}}</td>
 							<td>{{cargo}}</td>
 							<td>
-							{{#each candidatos}}
-							<button type="button" class="btn btn-info btn-sm">{{nome}}</button><br>
-							{{else}}
-							{{/each}} 
+								{{#each chapa}}
+									<button type="button" class="btn btn-info btn-sm">{{nome}}</button><br>
+								{{else}}
+								{{/each}} 
 							</td>
-												<td>{{descricao}}</td>
+							<td>{{descricao}}</td>
 							<td>{{status}}</td>
 							<td >
 

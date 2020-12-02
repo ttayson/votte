@@ -2,27 +2,22 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema;
 
 
-const Eleicao = new Schema({
+const Chapa = new Schema({
     nome: {
         type: String,
         require:true
     },
-    cargo: {
-        type: String,
+    numero: {
+        type: Number,
         require: true
     },
     descricao: {
         type: String,
         require: false
     },
-    status: {
-        type: Number,
-        require: true,
-        default: 0
-    },
-    chapa: [{
+    candidatos: [{
         type: Schema.Types.ObjectId,
-        ref: "chapa",
+        ref: "candidato",
         require: true
     }]
     // date: {
@@ -32,4 +27,4 @@ const Eleicao = new Schema({
 
 })
 
-mongoose.model("eleicao", Eleicao)
+mongoose.model("chapa", Chapa)
