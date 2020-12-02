@@ -10,6 +10,7 @@ const flash = require('connect-flash')
 const path = require('path')
 
 const admin = require("./routes/admin")
+const guest = require("./routes/guest")
 
 // Banco de Dados
 const mongoose = require('mongoose')
@@ -70,6 +71,7 @@ const hbs = handlebars.create({
 // Rotas
 
 app.use("/admin", admin)
+app.use("/", guest)
 
 
 const PORT = 8081
