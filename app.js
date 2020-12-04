@@ -9,6 +9,9 @@ const session = require('express-session')
 const flash = require('connect-flash')
 const path = require('path')
 
+const passport = require('passport')
+require("./config/Auth")(passport)
+
 const admin = require("./routes/admin")
 const guest = require("./routes/guest")
 
@@ -32,6 +35,9 @@ const hbs = handlebars.create({
         saveUninitialized: true
     }))
 
+    app.use(passport.initialize())
+    app.use(passport.session())
+
     app.use(flash())
 
     //middleware
@@ -39,6 +45,8 @@ const hbs = handlebars.create({
     app.use((req, res, next) =>{
         res.locals.success_msg = req.flash("success_msg")
         res.locals.error_msg = req.flash("error_msg")
+        res.locals.error = req.flash("error")
+        res.locals.user = req.user || null
         next()
     })
 
@@ -71,7 +79,7 @@ const hbs = handlebars.create({
 // Rotas
 
 app.use("/admin", admin)
-app.use("/", guest)
+app.use("/login", guest)
 
 
 const PORT = 8081

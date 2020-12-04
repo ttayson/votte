@@ -9,11 +9,32 @@ const Candidato =mongoose.model("candidato")
 const Eleicao =mongoose.model("eleicao")
 const Chapa =mongoose.model("chapa")
 
+const { userLogin }= require("../helpers/userLogin")
+
+//Tratamento do CSV
+const neatCsv = require('neat-csv');
+const fs = require('fs');
+
+// Upload files
+const path = require('path')
+const multer = require('multer')
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, `${file.fieldname}-${Date.now()}.${path.extname(file.originalname)}`);
+    }
+});
+
+const upload = multer({ storage });
 
 const router = express.Router()
 
 
-router.get('/', (req, res) => {
+router.get('/', userLogin, (req, res) => {
     Eleicao.find({status:0}).populate("candidatos").then((eleicao) =>{
         res.render("admin/index", {eleicao: eleicao})
     })
@@ -32,14 +53,14 @@ router.get('/finalizadas', (req, res) => {
     res.render("admin/finalizadas")
 })
 
-router.get('/eleicao', (req, res) => {
+router.get('/eleicao', userLogin,  (req, res) => {
     Eleicao.find().populate("chapa").then((eleicao) =>{
         res.render("admin/eleicao", {eleicao: eleicao})
     })
     
 })
 
-router.get('/eleicao/edit/:id', (req, res) => {
+router.get('/eleicao/edit/:id', userLogin, (req, res) => {
     Eleicao.findOne({_id:req.params.id}).populate("chapa").then((eleicao) =>{
         Chapa.find().then((chapa) => {
         res.render("admin/editeleicao", {eleicao: eleicao, chapa: chapa})
@@ -52,7 +73,7 @@ router.get('/eleicao/edit/:id', (req, res) => {
             
 })
 
-router.post('/eleicao/edit/del/', (req, res) => {
+router.post('/eleicao/edit/del/', userLogin, (req, res) => {
     Eleicao.remove({_id:req.body.id}).then(() =>{
         // res.redirect("/admin/eleicao")
         res.json({ ok: "deletok"})
@@ -64,7 +85,7 @@ router.post('/eleicao/edit/del/', (req, res) => {
             
 })
 
-router.post('/eleicao/edit/', (req, res) => {
+router.post('/eleicao/edit/', userLogin, (req, res) => {
     Eleicao.findOne({_id:req.body.id}).then((eleicao) =>{
         Chapa.find().then((chapa) => {
 
@@ -109,13 +130,13 @@ router.post('/eleicao/edit/', (req, res) => {
             
 })
 
-router.get('/novaeleicao', (req, res) => {
+router.get('/novaeleicao', userLogin, (req, res) => {
     Chapa.find().then((chapa) => {
         res.render("admin/novaeleicao", {chapa: chapa})
     })
 })
 
-router.get('/eleicao/status/:id', (req, res) => {
+router.get('/eleicao/status/:id', userLogin, (req, res) => {
     Eleicao.findOne({_id:req.params.id}).then((eleicao) =>{
         if (eleicao.status == 0) {
             res.json({ info: "Não iniciada"})
@@ -130,7 +151,7 @@ router.get('/eleicao/status/:id', (req, res) => {
     })
 })
 
-router.post('/novaeleicao/add', (req, res) => {
+router.post('/novaeleicao/add', userLogin, (req, res) => {
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
@@ -167,14 +188,14 @@ router.post('/novaeleicao/add', (req, res) => {
     
 })
 
-router.get('/candidato', (req, res) => {
+router.get('/candidato', userLogin, (req, res) => {
     Candidato.find().then((candidato) =>{
         res.render("admin/candidato", {candidato: candidato})
     })
     
 })
 
-router.post('/candidato/del', (req, res) => {
+router.post('/candidato/del', userLogin, (req, res) => {
     Candidato.remove({_id:req.body.id}).then(() => {
         // res.redirect("/admin/eleicao")
         res.json({ ok: "deletok"})
@@ -184,7 +205,7 @@ router.post('/candidato/del', (req, res) => {
     })
 })
 
-router.get('/candidato/edit/:id', (req, res) => {
+router.get('/candidato/edit/:id', userLogin, (req, res) => {
     Candidato.findOne({_id:req.params.id}).then((candidato) =>{
         res.render("admin/candidatoedit", {candidato: candidato})
     }).catch((err)=>{
@@ -192,7 +213,7 @@ router.get('/candidato/edit/:id', (req, res) => {
     })
 })
 
-router.post('/candidato/edit', (req, res) => {
+router.post('/candidato/edit', userLogin, (req, res) => {
     Candidato.findOne({_id:req.body.id}).then((candidato) =>{
         var erros = []
 
@@ -231,12 +252,12 @@ router.post('/candidato/edit', (req, res) => {
     
 })
 
-router.get('/novocandidato', (req, res) => {
+router.get('/novocandidato', userLogin, (req, res) => {
         res.render("admin/novocandidato")
      
 })
 
-router.post("/novocandidato/add", (req, res) => {
+router.post("/novocandidato/add", userLogin, (req, res) => {
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
@@ -276,19 +297,19 @@ router.post("/novocandidato/add", (req, res) => {
 
 })
 
-router.get("/chapas", (req, res) => {
+router.get("/chapas", userLogin, (req, res) => {
     Chapa.find().populate("candidatos").then((chapa) =>{
         res.render("admin/chapas", {chapa: chapa})
     })
 })
 
-router.get("/novachapa", (req, res) => {
+router.get("/novachapa", userLogin, (req, res) => {
     Candidato.find().then((candidatos) => {
         res.render("admin/novachapa", {candidatos: candidatos})
     })    
 })
 
-router.post('/novachapa/add', (req, res) => {
+router.post('/novachapa/add', userLogin, (req, res) => {
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
@@ -325,7 +346,7 @@ router.post('/novachapa/add', (req, res) => {
     
 })
 
-router.get('/chapas/edit/:id', (req, res) => {
+router.get('/chapas/edit/:id', userLogin, (req, res) => {
     Chapa.findOne({_id:req.params.id}).populate("candidatos").then((chapa) =>{
         Candidato.find().then((candidatos) => {
         res.render("admin/chapaedit", {chapa: chapa, candidatos: candidatos})
@@ -336,7 +357,7 @@ router.get('/chapas/edit/:id', (req, res) => {
     })
 })
 
-router.post('/chapas/edit', (req, res) => {
+router.post('/chapas/edit', userLogin, (req, res) => {
     Chapa.findOne({_id:req.body.id}).then((chapa) =>{
         Candidato.find().then((candidatos) => {
 
@@ -381,7 +402,7 @@ router.post('/chapas/edit', (req, res) => {
     
 })
 
-router.post('/chapas/edit/del', (req, res) => {
+router.post('/chapas/edit/del', userLogin, (req, res) => {
     Chapa.remove({_id:req.body.id}).then(() =>{
         // res.redirect("/admin/eleicao")
         res.json({ ok: "deletok"})
@@ -392,5 +413,26 @@ router.post('/chapas/edit/del', (req, res) => {
     
             
 })
+
+router.get('/eleitor', (req, res) => {
+
+    fs.readFile('./uploads/file.csv', async (err, data) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        console.log(await neatCsv(data))
+      })
+        
+      res.render("admin/eleitor")
+    
+})
+
+router.post('/eleitor', upload.single('file'), (req, res) => {
+    
+    res.redirect('/admin/eleitor')
+ 
+})
+
 
 module.exports = router
