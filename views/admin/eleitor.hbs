@@ -30,7 +30,7 @@
 					</a></li>
 				</ul>
 			</li>
-			<li><a href="login.html"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
+			<li><a href="/admin/logout"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
 		</ul>
 	</div><!--/.sidebar-->
 	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
@@ -73,23 +73,18 @@
 					<th scope="col">Matrícula</th>
 					<th scope="col">CPF</th>
 					<th scope="col">Celular</th>
+					<th scope="col">Ação</th>
 
 					</tr>
 
 					</thead>
 					<tbody>
-                  {{#each chapa}}
+                  {{#each eleitor}}
                   <tr>
-                    
-                    <td>{{nome}}</td>
-                    <td>{{numero}}</td>
-                    <td>
-											{{#each candidatos}}
-												<button type="button" class="btn btn-info btn-sm">{{nome}}</button><br>
-											{{else}}
-											{{/each}} 
-										</td>
-                    <td>{{descricao}}</td>
+                    <td>{{Nome}}</td>
+                    <td>{{Matricula}}</td>
+										<td>{{CPF}}</td>
+                    <td>{{Telefone}}</td>
 					<td>
 
 								<span class="btn btn-primary btn-sm" onclick="window.location='/admin/chapas/edit/{{id}}'">

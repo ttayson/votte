@@ -25,7 +25,9 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/')
     },
     filename: function (req, file, cb) {
-        cb(null, `${file.fieldname}-${Date.now()}.${path.extname(file.originalname)}`);
+        console.log(file.fieldname  )
+        // cb(null, file.fieldname + '-' + uniqueSuffix)
+        cb(null, `${file.fieldname}${path.extname(file.originalname)}`);
     }
 });
 
@@ -421,10 +423,12 @@ router.get('/eleitor', (req, res) => {
           console.error(err)
           return
         }
-        console.log(await neatCsv(data))
+        const eleitor = await neatCsv(data)
+
+        res.render("admin/eleitor", {eleitor: eleitor})
       })
         
-      res.render("admin/eleitor")
+      
     
 })
 
@@ -433,6 +437,17 @@ router.post('/eleitor', upload.single('file'), (req, res) => {
     res.redirect('/admin/eleitor')
  
 })
+
+router.get('/logout', (req, res) => {
+    
+    req.logout()
+    req.flash("error", "Logout necessário")
+    res.redirect('/login')
+ 
+})
+
+
+
 
 
 module.exports = router
