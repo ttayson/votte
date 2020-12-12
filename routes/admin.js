@@ -20,6 +20,7 @@ const Resize = require('../helpers/resize');
 const UploadCSV = require('../helpers/uploadCSV');
 const UploadImg = require('../helpers/uploadImg');
 const path = require('path');
+const { Console } = require('console')
 
 
 
@@ -167,7 +168,7 @@ router.post('/novaeleicao/add', userLogin, (req, res) => {
             nome: req.body.nome,
             cargo: req.body.cargo,
             descricao: req.body.descricao,
-            candidatos: req.body.candidatos
+            chapa: req.body.chapa
         }
     
         new Eleicao(novaEleicao).save().then(() => {
@@ -304,15 +305,15 @@ router.get("/novachapa", (req, res) => {
 
 router.post('/novachapa/add', UploadImg.single('image'), async (req, res) => {
     // upload and resize image
-    const imagePath = path.join(__dirname, '../public/images');
-    const fileUpload = new Resize(imagePath);
+    var filename = null
 
-    if (!req.file) {
-    req.flash("error", "Please provide an image")
+    if (req.file){
+        const imagePath = path.join(__dirname, '../public/images');
+        const fileUpload = new Resize(imagePath);
+        // req.flash("error", "Please provide an image")
+        console.log("entoru aqui")
+        filename = await fileUpload.save(req.file.buffer);
     }
-    const filename = await fileUpload.save(req.file.buffer);
-
-    // return res.status(200).json({ name: filename })
     
     
     var erros = []
@@ -387,7 +388,7 @@ router.post('/chapas/edit', UploadImg.single('image'), userLogin, async (req, re
         var erros = []
 
         if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
-            erros.push({text: "Nome para eleição inválido"})
+            erros.push({text: "Nome para chapa inválido"})
         }
 
         if(!req.body.numero || typeof req.body.numero == undefined || req.body.numero == null){
@@ -464,7 +465,7 @@ router.post('/eleitor', UploadCSV.single('file'), (req, res) => {
 router.get('/logout', (req, res) => {
     
     req.logout()
-    req.flash("error", "Logout necessário")
+    req.flash("error", "Logout realizado")
     res.redirect('/login')
  
 })

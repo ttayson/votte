@@ -53,6 +53,9 @@ const hbs = handlebars.create({
     //body parser
     app.use(bodyParser.urlencoded({extended: true}))
     app.use(bodyParser.json())
+
+    //IP
+    app.set('trust proxy', true)
     
     //Handlebars
 
@@ -79,7 +82,7 @@ const hbs = handlebars.create({
 // Rotas
 
 app.use("/admin", admin)
-app.use("/login", guest)
+app.use("/", guest)
 
 
 const PORT = 8081

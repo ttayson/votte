@@ -1,0 +1,236 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<section class="our-webcoderskull padding-lg">
+  <div class="container">
+    <div class="row heading heading-icon">
+        <h2>Eleições</h2>
+        {{#each eleicao}}
+        <h3>{{nome}}</h3>
+        <input type="hidden" id="eleicaoID" value="{{_id}}">
+        {{else}}
+        {{/each}}
+    </div>
+    <ul class="row" style="justify-content: center;">
+      {{#each chapa}}
+
+      <li class="col-12 col-md-6 col-lg-4">
+          <div class="cnt-block equal-hight" style="height: 400px;">
+            <figure><img src="/images/{{imageName}}" class="img-responsive" alt=""></figure>
+            <h3><a href="http://www.webcoderskull.com/">Chapa: {{nome}}</a></h3>
+            <p>{{descricao}}</p>
+            {{#each candidatos}}
+            <span> {{nome}}</span>
+            {{else}}
+            {{/each}}
+              <ul class="follow-us clearfix">
+              <li>
+                <button class="btn btn-primary" onclick="votar('{{id}}')">Votar</button>
+              </li>
+            </ul>
+ 
+          </div>
+      </li>
+      {{else}}
+      {{/each}}
+
+    </ul>
+  </div>
+</section>
+
+<script>
+
+  async function votar (id){
+    const { value: formValues } = await Swal.fire({
+    title: 'Confirme dados',
+    html:
+      '<p style="text-align: left;">Matrícula</p><input id="swal-input1" placeholder="Matrícula" class="swal2-input" style="margin-top: 0; max-width: 100%;" type="number">' +
+      '<p style="text-align: left;">Senha</p><input id="swal-input2" placeholder="Senha" class="swal2-input" style="margin-top: 0;" type="password">',
+    focusConfirm: false,
+    preConfirm: () => {
+      return [
+        id,
+        document.getElementById('eleicaoID').value,
+        document.getElementById('swal-input1').value,
+        document.getElementById('swal-input2').value
+      ]
+    }
+  })
+console.log(formValues)
+  if (formValues){
+      $.ajax({
+        url:'/votar',
+        method:'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formValues)
+      }).done(function(retorno){
+        
+        if (retorno.ok == "deletok"){
+            msg()
+            async function msg(){
+
+              await Swal.fire({
+                  position: 'top-end',
+                  icon: 'success',
+                  title: 'Deletado',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+
+              location.reload();
+
+              }
+
+        }
+        
+      })
+  }  
+ 
+  
+}
+    
+
+</script>
+
+<style>
+
+  .our-webcoderskull .cnt-block  span{
+    font-size:14px;
+    background:#e91e63;
+    color:#fff;
+    display:inline-block;
+    padding:4px 10px;
+    margin-top: 3px;
+    border-radius:15px;
+}
+  .row.heading h2 {
+    color: #fff;
+    font-size: 52.52px;
+    line-height: 50px;
+    font-weight: 400;
+    text-align: center;
+    margin: 0 0 20px;
+    padding-bottom: 20px;
+    text-transform: uppercase;
+}
+
+  .row.heading h3 {
+    color: #fff;
+    font-size: 25px;
+    font-weight: 400;
+    text-align: center;
+    margin: 0 0 5px;
+    padding-bottom: 50px;
+    text-transform: uppercase;
+}
+ul{
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.heading.heading-icon {
+    display: block;
+}
+.padding-lg {
+	display: block;
+	padding-top: 60px;
+	padding-bottom: 60px;
+}
+.practice-area.padding-lg {
+    padding-bottom: 55px;
+    padding-top: 55px;
+}
+.practice-area .inner{ 
+     border:1px solid #999999; 
+	 text-align:center; 
+	 margin-bottom:28px; 
+	 padding:40px 25px;
+}
+.our-webcoderskull .cnt-block:hover {
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+    border: 0;
+}
+.practice-area .inner h3{ 
+    color:#3c3c3c; 
+	font-size:24px; 
+	font-weight:500;
+	font-family: 'Poppins', sans-serif;
+	padding: 10px 0;
+}
+.practice-area .inner p{ 
+    font-size:14px; 
+	line-height:22px; 
+	font-weight:400;
+}
+.practice-area .inner img{
+	display:inline-block;
+}
+
+
+.our-webcoderskull{
+  background: #1565c0; 
+  
+}
+.our-webcoderskull .cnt-block{ 
+   float:left; 
+   width:100%; 
+   background:#fff; 
+   padding:10px 10px; 
+   text-align:center; 
+   border:2px solid #d5d5d5;
+   margin: 0 0 28px;
+   border-radius: 8px;
+}
+.our-webcoderskull .cnt-block figure{
+   width:148px; 
+   height:148px; 
+   border-radius:100%; 
+   display:inline-block;
+   margin-bottom: 15px;
+}
+.our-webcoderskull .cnt-block img{ 
+   width:148px; 
+   height:148px; 
+   border-radius:100%; 
+}
+.our-webcoderskull .cnt-block h3{ 
+   color:#2a2a2a; 
+   font-size:20px; 
+   font-weight:500; 
+   padding:6px 0;
+   text-transform:uppercase;
+}
+.our-webcoderskull .cnt-block h3 a{
+  text-decoration:none;
+	color:#2a2a2a;
+}
+.our-webcoderskull .cnt-block h3 a:hover{
+	color:#337ab7;
+}
+.our-webcoderskull .cnt-block p{ 
+   color:#2a2a2a; 
+   font-size:13px; 
+   line-height:20px; 
+   font-weight:400;
+}
+.our-webcoderskull .cnt-block .follow-us{
+	margin:20px 0 0;
+}
+.our-webcoderskull .cnt-block .follow-us li{ 
+    display:inline-block; 
+	width:auto; 
+	margin:0 5px;
+}
+.our-webcoderskull .cnt-block .follow-us li .fa{ 
+   font-size:24px; 
+   color:#767676;
+}
+.our-webcoderskull .cnt-block .follow-us li .fa:hover{ 
+   color:#025a8e;
+}
+
+</style>

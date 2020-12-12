@@ -19,12 +19,12 @@ const { userLogin }= require("../helpers/userLogin")
 const router = express.Router()
 
 
-router.get('/', (req, res) => {
+router.get('/login', (req, res) => {
         res.render("guest/login", {layout: "basic"});
         // res.json({ ok: "Teste"})
 })
 
-router.post("/", (req, res, next) => {
+router.post("/login", (req, res, next) => {
         // Rota de Login
         passport.authenticate("local", {
                 successRedirect: "/admin",
@@ -33,6 +33,32 @@ router.post("/", (req, res, next) => {
 
         })(req, res, next)
 })
+
+router.get('/votar', (req, res) => {
+        Eleicao.find({status:0}).lean().populate("chapa").then((eleicao) =>{
+                var ids = []
+
+                for ( item in eleicao[0]["chapa"]) {
+                        ids.push({_id: eleicao[0]["chapa"][item]['_id']})
+                }
+
+                Chapa.find({_id:ids}).populate("candidatos").then((chapa) =>{
+                   res.render("guest/votar", {layout: "basic", eleicao: eleicao, chapa: chapa})
+                })
+
+        })
+        // res.json({ ok: "Teste"})
+})
+
+router.post('/votar', (req, res) => {
+        var ip = req.ip
+        console.log(ip)
+        console.log(req.body[3])
+        res.json({ ok: "Teste"})
+})
+
+
+
 
 router.get("/cadastrar", (req, res) => {
         console.log("teste")
