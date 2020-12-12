@@ -16,22 +16,13 @@ const neatCsv = require('neat-csv');
 const fs = require('fs');
 
 // Upload files
-const path = require('path')
-const multer = require('multer')
+const Resize = require('../helpers/resize');
+const UploadCSV = require('../helpers/uploadCSV');
+const UploadImg = require('../helpers/uploadImg');
+const path = require('path');
 
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        console.log(file.fieldname  )
-        // cb(null, file.fieldname + '-' + uniqueSuffix)
-        cb(null, `${file.fieldname}${path.extname(file.originalname)}`);
-    }
-});
 
-const upload = multer({ storage });
 
 const router = express.Router()
 
@@ -305,13 +296,25 @@ router.get("/chapas", userLogin, (req, res) => {
     })
 })
 
-router.get("/novachapa", userLogin, (req, res) => {
+router.get("/novachapa", (req, res) => {
     Candidato.find().then((candidatos) => {
         res.render("admin/novachapa", {candidatos: candidatos})
     })    
 })
 
-router.post('/novachapa/add', userLogin, (req, res) => {
+router.post('/novachapa/add', UploadImg.single('image'), async (req, res) => {
+    // upload and resize image
+    const imagePath = path.join(__dirname, '../public/images');
+    const fileUpload = new Resize(imagePath);
+
+    if (!req.file) {
+    req.flash("error", "Please provide an image")
+    }
+    const filename = await fileUpload.save(req.file.buffer);
+
+    // return res.status(200).json({ name: filename })
+    
+    
     var erros = []
 
     if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
@@ -331,6 +334,7 @@ router.post('/novachapa/add', userLogin, (req, res) => {
     }else{
 
         const novaChapa = {
+            imageName: filename,
             nome: req.body.nome,
             numero: req.body.numero,
             descricao: req.body.descricao,
@@ -359,10 +363,27 @@ router.get('/chapas/edit/:id', userLogin, (req, res) => {
     })
 })
 
-router.post('/chapas/edit', userLogin, (req, res) => {
+router.post('/chapas/edit', UploadImg.single('image'), userLogin, async (req, res) => {
+    var filename = null
+
+    if (req.file){
+        const imagePath = path.join(__dirname, '../public/images');
+        const fileUpload = new Resize(imagePath);
+        // req.flash("error", "Please provide an image")
+        console.log("entoru aqui")
+        filename = await fileUpload.save(req.file.buffer);
+    }
+
+
+
     Chapa.findOne({_id:req.body.id}).then((chapa) =>{
         Candidato.find().then((candidatos) => {
-
+            if (!req.file){
+                filename = chapa.imageName
+                console.log(filename)
+            }
+        
+     
         var erros = []
 
         if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
@@ -382,7 +403,7 @@ router.post('/chapas/edit', userLogin, (req, res) => {
             res.render("admin/chapaedit", {erros: erros, chapa: chapa, candidatos: candidatos})
 
         }else{
-
+                chapa.imageName = filename
                 chapa.nome = req.body.nome
                 chapa.numero = req.body.numero
                 chapa.descricao = req.body.descricao
@@ -425,14 +446,16 @@ router.get('/eleitor', (req, res) => {
         }
         const eleitor = await neatCsv(data)
 
-        res.render("admin/eleitor", {eleitor: eleitor})
+        
       })
+
+      res.render("admin/eleitor")
         
       
     
 })
 
-router.post('/eleitor', upload.single('file'), (req, res) => {
+router.post('/eleitor', UploadCSV.single('file'), (req, res) => {
     
     res.redirect('/admin/eleitor')
  
@@ -445,8 +468,6 @@ router.get('/logout', (req, res) => {
     res.redirect('/login')
  
 })
-
-
 
 
 

@@ -65,7 +65,16 @@
 
 				{{/each}}
 				
-				<form class="form-horizontal" action="/admin/chapas/edit" method="POST">
+				<form class="form-horizontal" action="/admin/chapas/edit" method="POST" enctype="multipart/form-data">
+				
+				<div class="form-group row">
+					<div class="col-xs-offset-4 col-xs-8">
+						<div class="form-group"id="profile-container">
+							<image id="profileImage" src="/images/{{chapa.imageName}}" />
+						</div>
+						<input id="imageUpload" type="file" name="image" placeholder="Photo" capture>
+					</div>
+				</div>
 				<div class="form-group">
 					<label for="nome" class="control-label col-xs-4">Nome da Chapa</label> 
 					<div class="col-xs-8">
@@ -124,3 +133,48 @@
 		</div>
 
 	</div>	<!--/.main-->
+
+		<style>
+		#imageUpload
+	{
+			display: none;
+	}
+
+	#profileImage
+	{
+			cursor: pointer;
+	}
+
+	#profile-container {
+			width: 150px;
+			height: 150px;
+			overflow: hidden;
+			-webkit-border-radius: 50%;
+			-moz-border-radius: 50%;
+			-ms-border-radius: 50%;
+			-o-border-radius: 50%;
+			border-radius: 50%;
+	}
+
+	#profile-container img {
+			width: 150px;
+			height: 150px;
+	}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script>
+		$("#profileImage").click(function(e) {
+    $("#imageUpload").click();
+		});
+
+		function fasterPreview( uploader ) {
+				if ( uploader.files && uploader.files[0] ){
+							$('#profileImage').attr('src', 
+								window.URL.createObjectURL(uploader.files[0]) );
+				}
+		}
+
+		$("#imageUpload").change(function(){
+				fasterPreview( this );
+		});
+	</script>

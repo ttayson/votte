@@ -15,6 +15,10 @@ const Chapa = new Schema({
         type: String,
         require: false
     },
+    imageName: {
+        type: String,
+        require: false
+    },
     candidatos: [{
         type: Schema.Types.ObjectId,
         ref: "candidato",
