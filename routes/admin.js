@@ -4,10 +4,12 @@ const mongoose = require("mongoose")
 require("../models/Candidato")
 require("../models/Eleicao")
 require("../models/Chapa")
+require("../models/Eleitor")
 
 const Candidato =mongoose.model("candidato")
 const Eleicao =mongoose.model("eleicao")
 const Chapa =mongoose.model("chapa")
+const Eleitor =mongoose.model("eleitor")
 
 const { userLogin }= require("../helpers/userLogin")
 
@@ -20,9 +22,6 @@ const Resize = require('../helpers/resize');
 const UploadCSV = require('../helpers/uploadCSV');
 const UploadImg = require('../helpers/uploadImg');
 const path = require('path');
-const { Console } = require('console')
-
-
 
 
 const router = express.Router()
@@ -439,6 +438,14 @@ router.post('/chapas/edit/del', userLogin, (req, res) => {
 })
 
 router.get('/eleitor', (req, res) => {
+    
+      res.render("admin/eleitor")
+        
+      
+    
+})
+
+router.post('/eleitor', UploadCSV.single('file'), (req, res) => {
 
     fs.readFile('./uploads/file.csv', async (err, data) => {
         if (err) {
@@ -447,16 +454,26 @@ router.get('/eleitor', (req, res) => {
         }
         const eleitor = await neatCsv(data)
 
+        for (item in eleitor) {
+            
+            const novoEleitor = {
+                nome: eleitor[item]["nome"],
+                email: eleitor[item]["email"],
+                cpf: eleitor[item]["cpf"],
+                matricula: eleitor[item]["matricula"],
+                telefone: eleitor[item]["telefone"],
+                senha: eleitor[item]["senha"]
+            }
         
+            await new Eleitor(novoEleitor).save().then(() => {
+                console.log("Eleitor cadastrada com Sucesso")
+            }).catch((err) => {
+                console.log("Erro ao Salvar no Banco (Eleitor)")
+            });
+
+        }
       })
-
-      res.render("admin/eleitor")
-        
       
-    
-})
-
-router.post('/eleitor', UploadCSV.single('file'), (req, res) => {
     
     res.redirect('/admin/eleitor')
  

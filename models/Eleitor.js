@@ -15,6 +15,15 @@ const Eleitor = new Schema({
         type: Number,
         require: true
     },
+    cpf: {
+        type: Number,
+        require: true,
+        unique: true
+    },
+    telefone: {
+        type: Number,
+        require: true
+    },
     ativo: {
         type: Number,
         default: 1

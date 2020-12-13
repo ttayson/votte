@@ -69,7 +69,8 @@ const hbs = handlebars.create({
     mongoose.Promise = global.Promise;
     mongoose.connect("mongodb://localhost/votta2", {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useCreateIndex: true
     }).then(() => {
         console.log("Mongo Conectado")    
     }).catch((err) => {
