@@ -46,7 +46,7 @@ router.get('/finalizadas', (req, res) => {
     res.render("admin/finalizadas")
 })
 
-router.get('/eleicao', userLogin,  (req, res) => {
+router.get('/eleicao', (req, res) => {
     Eleicao.find().populate("chapa").then((eleicao) =>{
         res.render("admin/eleicao", {eleicao: eleicao})
     })
@@ -129,18 +129,32 @@ router.get('/novaeleicao', userLogin, (req, res) => {
     })
 })
 
-router.get('/eleicao/status/:id', userLogin, (req, res) => {
+router.get('/eleicao/status/:id', (req, res) => {
     Eleicao.findOne({_id:req.params.id}).then((eleicao) =>{
         if (eleicao.status == 0) {
-            res.json({ info: "Não iniciada"})
+            res.json({ info: 0})
         }else if (eleicao.status == 1){
-            res.json({ info: "Iniciada"})
+            res.json({ info: 1})
         }else if (eleicao.status == 2){
-            res.json({ info: "Pausada"})
-        }else if (eleicao.status == 4){
-            res.json({ info: "Finalizada"})
+            res.json({ info: 2})
+        }else if (eleicao.status == 3){
+            res.json({ info: 3})
         }
 
+    })
+})
+
+router.post('/eleicao/status', (req, res) => {
+   Eleicao.findOne({_id:req.body.id}).then((eleicao) =>{
+        
+                eleicao.status = req.body.resp
+
+                eleicao.save().then(() => {
+                    console.log("Eleição iniciada")
+                    res.json({ info: req.body.resp})
+                }).catch((err) => {
+                        console.log("Erro ao Salvar no Banco (Start Eleição)")
+                });
     })
 })
 

@@ -13,7 +13,8 @@ const Eleitor = new Schema({
     },
     matricula: {
         type: Number,
-        require: true
+        require: true,
+        unique: true        
     },
     cpf: {
         type: Number,

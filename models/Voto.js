@@ -24,7 +24,15 @@ const Voto = new Schema({
     }],
     ntentativas: {
         type: Number,
-
+        default: 0
+    },
+    valido: {
+        type: Number,
+        default: 0
+    },  
+    date: {
+        type: Date,
+        default: Date.now()
     }
 })
 

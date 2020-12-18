@@ -16,93 +16,20 @@
         {{/each}}
     </div>
     <ul class="row" style="justify-content: center;">
-      {{#each chapa}}
 
       <li class="col-12 col-md-6 col-lg-4">
           <div class="cnt-block equal-hight" style="height: 400px;">
-            <figure><img src="/images/{{imageName}}" class="img-responsive" alt=""></figure>
-            <h3><a>Chapa: {{nome}}</a></h3>
-            <p>{{descricao}}</p>
-            {{#each candidatos}}
-            <span> {{nome}}</span>
-            {{else}}
-            {{/each}}
-              <ul class="follow-us clearfix">
-              <li>
-                <button class="btn btn-primary" onclick="votar('{{id}}')">Votar</button>
-              </li>
-            </ul>
- 
-          </div>
-      </li>
-      {{else}}
-      {{/each}}
+            <figure><img src="/stop.png" class="img-responsive" alt=""></figure>
+            <h3><a>VOTAÇÃO PAUSADA</a></h3>
 
+            <span> Aguarde... </span>
+
+           </div>
+      </li>
     </ul>
   </div>
 </section>
 
-<script>
-
-  async function votar (id){
-    const { value: formValues } = await Swal.fire({
-    title: 'Confirme dados',
-    html:
-      '<p style="text-align: left;">Matrícula</p><input id="swal-input1" placeholder="Matrícula" class="swal2-input" style="margin-top: 0; max-width: 100%;" type="number">' +
-      '<p style="text-align: left;">Senha</p><input id="swal-input2" placeholder="Senha" class="swal2-input" style="margin-top: 0;" type="password">',
-    focusConfirm: false,
-    preConfirm: () => {
-      return [
-        id,
-        document.getElementById('eleicaoID').value,
-        document.getElementById('swal-input1').value,
-        document.getElementById('swal-input2').value
-      ]
-    }
-  })
-  if (formValues){
-      $.ajax({
-        url:'/votar',
-        method:'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(formValues)
-      }).done(function(retorno){
-        
-        if (retorno.erro == "inexistente"){
-
-               Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Matrícula ou senha incorretos!',
-                  showConfirmButton: true,
-                })
-
-        }else if (retorno.ok == "valido"){
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Voto validado',
-                  text: 'Obrigado pela participação',
-                  showConfirmButton: true,
-                })
-
-        }else if (retorno.erro == "votado"){
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Usuário ja votou',
-                  text: 'Obrigado pela participação',
-                  showConfirmButton: true,
-                })
-
-        }
-
-      })
-  }  
- 
-  
-}
-    
-
-</script>
 
 <style>
 

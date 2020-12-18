@@ -185,23 +185,113 @@
 			const inputValue = fetch(APIstatus)
 			.then(response => response.json())
 			.then(data => {
-				if (data.info == "Não iniciada"){
-					Swal.fire({
-						title: 'Iniciar Eleição',
-						showDenyButton: true,
-						showCancelButton: true,
-						confirmButtonText: `Sim`,
-						denyButtonText: `Não`,
-					}).then((result) => {
+				if (data.info == 0){
+							Swal.fire({
+								title: 'Iniciar Eleição',
+								showDenyButton: true,
+								showCancelButton: true,
+								confirmButtonText: `Iniciar`,
+								denyButtonText: `Não`,
+							}).then((result) => {
+								
 						/* Read more about isConfirmed, isDenied below */
-						if (result.isConfirmed) {
-							Swal.fire('Eleição Iniciada!', '', 'success')
-						} else if (result.isDenied) {
-							Swal.fire('Eleição Não Iniciada', '', 'info')
-						}
-					})
-				}
-			})
+									if (result.isConfirmed) {
+											$.ajax({
+												url:'/admin/eleicao/status',
+												method:'POST',
+												contentType: 'application/json',
+												dataType: 'json',
+												data: JSON.stringify({"resp": 1, "id": id})
+											}).done(function(retorno){
+												if (retorno.info == 1){
+													Swal.fire('Eleição Iniciada!', '', 'success')
+												}
+											})
+									
+									} else if (result.isDenied) {
+										Swal.fire('Eleição Não Iniciada', '', 'info')
+									}
+							})
+				}else if (data.info == 1){
+							Swal.fire({
+								title: 'Eleição Iniciada',
+								showDenyButton: true,
+								showCancelButton: true,
+								confirmButtonText: `Pausar`,
+								denyButtonText: `Finalizar`,
+							}).then((result) => {
+								
+						/* Read more about isConfirmed, isDenied below */
+									if (result.isConfirmed) {
+											$.ajax({
+												url:'/admin/eleicao/status',
+												method:'POST',
+												contentType: 'application/json',
+												dataType: 'json',
+												data: JSON.stringify({"resp": 2, "id": id})
+											}).done(function(retorno){
+												if (retorno.info == 2){
+													Swal.fire('Eleição Pausada!', '', 'success')
+												}
+											})
+									
+									} else if (result.isDenied) {
+											$.ajax({
+												url:'/admin/eleicao/status',
+												method:'POST',
+												contentType: 'application/json',
+												dataType: 'json',
+												data: JSON.stringify({"resp": 3, "id": id})
+											}).done(function(retorno){
+												if (retorno.info == 3){
+													Swal.fire('Eleição Finalizada!', '', 'success')
+												}
+											})
+									}
+							})
+				}else if (data.info == 2){
+							Swal.fire({
+								title: 'Eleição Pausada',
+								showDenyButton: true,
+								showCancelButton: true,
+								confirmButtonText: `Reiniciar`,
+								denyButtonText: `Finalizar`,
+							}).then((result) => {
+								
+						/* Read more about isConfirmed, isDenied below */
+									if (result.isConfirmed) {
+											$.ajax({
+												url:'/admin/eleicao/status',
+												method:'POST',
+												contentType: 'application/json',
+												dataType: 'json',
+												data: JSON.stringify({"resp": 1, "id": id})
+											}).done(function(retorno){
+												if (retorno.info == 2){
+													Swal.fire('Eleição Reiniciada!', '', 'success')
+												}
+											})
+									
+									} else if (result.isDenied) {
+											$.ajax({
+												url:'/admin/eleicao/status',
+												method:'POST',
+												contentType: 'application/json',
+												dataType: 'json',
+												data: JSON.stringify({"resp": 3, "id": id})
+											}).done(function(retorno){
+												if (retorno.info == 3){
+													Swal.fire('Eleição Finalizada!', '', 'success')
+												}
+											})
+									}
+							})
 
-		}
+				}else if (data.info == 3){
+					Swal.fire('Eleição Finalizada!', '', 'error')
+					}
+			
+			})
+			
+	}
 	</script	>
