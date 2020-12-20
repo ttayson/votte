@@ -38,25 +38,63 @@ router.post("/login", (req, res, next) => {
         })(req, res, next)
 })
 
-router.get('/votar', (req, res) => {
-        Eleicao.find().or([{ status: 1 }, { status: 2 }]).lean().populate("chapa").then((eleicao) =>{
+router.get('/rmg', (req, res) => {
+        Eleicao.findOne({ local: "RMG"}).lean().populate("chapa").then((eleicao) =>{
+         
+        if (eleicao) {
                 
-                if (eleicao[0]["status"] == 1){
+                if (eleicao.status == 1){
 
                         var ids = []
 
-                        for ( item in eleicao[0]["chapa"]) {
-                                ids.push({_id: eleicao[0]["chapa"][item]['_id']})
+                        for ( item in eleicao.chapa) {
+                                ids.push({_id: eleicao.chapa[item]._id})
                         }
-
                         Chapa.find({_id:ids}).populate("candidatos").then((chapa) =>{
-                        res.render("guest/votar", {layout: "basic", eleicao: eleicao, chapa: chapa})
+
+                                res.render("guest/votar", {layout: "basic", eleicao: eleicao, chapa: chapa})
+                       
                         })
 
-                }else if (eleicao[0]["status"] == 2) {
+                }else if (eleicao.status == 2) {
                         res.render("guest/pausada", {layout: "basic", eleicao: eleicao})
+                }else if (eleicao.status == 3) {
+                        res.render("guest/indisponivel", {layout: "basic", eleicao: eleicao})
                 }
+        }else{
+                res.render("guest/indisponivel", {layout: "basic", eleicao: eleicao})   
+        }   
+        
+        })
+        // res.json({ ok: "Teste"})
+})
+
+router.get('/adc', (req, res) => {
+        Eleicao.findOne({ local: "ADC"}).lean().populate("chapa").then((eleicao) =>{
+         
+        if (eleicao) {
                 
+                if (eleicao.status == 1){
+
+                        var ids = []
+
+                        for ( item in eleicao.chapa) {
+                                ids.push({_id: eleicao.chapa[item]._id})
+                        }
+                        Chapa.find({_id:ids}).populate("candidatos").then((chapa) =>{
+
+                                res.render("guest/votar", {layout: "basic", eleicao: eleicao, chapa: chapa})
+                       
+                        })
+
+                }else if (eleicao.status == 2) {
+                        res.render("guest/pausada", {layout: "basic", eleicao: eleicao})
+                }else if (eleicao.status == 3) {
+                        res.render("guest/indisponivel", {layout: "basic", eleicao: eleicao})
+                }
+        }else{
+                res.render("guest/indisponivel", {layout: "basic", eleicao: eleicao})   
+        }   
         
         })
         // res.json({ ok: "Teste"})
@@ -65,42 +103,46 @@ router.get('/votar', (req, res) => {
 router.post('/votar', async (req, res) => {
         await Eleitor.findOne({matricula:req.body[2]}).then((eleitor)=>{
                 if(eleitor){
-                        if(eleitor.senha == req.body[3]){
-                                Eleicao.findOne({_id:req.body[1]}).then(async (eleicao) =>{
-                                        Voto.findOne({eleitor:eleitor._id}).then(async (voto) =>{
-                                                if(voto){
-                                                        res.json({ erro: "votado"})    
-                                                }else{
-                                                        
-                                                        if(eleicao.status == 1){
-                                                                const novoVoto = {
-                                                                        ip: req.ip,
-                                                                        chapa: req.body[0],
-                                                                        eleitor: eleitor._id,
-                                                                        eleicao: req.body[1],
-                                                                        valido: 1
+                        if(eleitor.local == req.body[4]){
+                                if(eleitor.senha == req.body[3]){
+                                        Eleicao.findOne({_id:req.body[1]}).then(async (eleicao) =>{
+                                                Voto.findOne().and([{ eleitor: eleitor._id }, { eleicao: req.body[1] }]).then(async (voto) =>{
+                                                        if(voto){
+                                                                res.json({ erro: "votado"})    
+                                                        }else{
+                                                                
+                                                                if(eleicao.status == 1){
+                                                                        const novoVoto = {
+                                                                                ip: req.ip,
+                                                                                chapa: req.body[0],
+                                                                                eleitor: eleitor._id,
+                                                                                eleicao: req.body[1],
+                                                                                local: req.body[4],
+                                                                                valido: 1
+                                                                        }
+                                        
+                                                                        await new Voto(novoVoto).save().then(() => {
+                                                                                res.json({ ok: "valido"})
+                                                                                console.log("Voto computado")
+                                                                        }).catch((err) => {
+                                                                                console.log("Erro ao Salvar no Banco (Voto)"+err)
+                                                                        });
+                                                                                                        
                                                                 }
-                                
-                                                                await new Voto(novoVoto).save().then(() => {
-                                                                        res.json({ ok: "valido"})
-                                                                        console.log("Voto computado")
-                                                                }).catch((err) => {
-                                                                        console.log("Erro ao Salvar no Banco (Voto)"+err)
-                                                                });
-                                                                                                
+
                                                         }
 
-                                                }
-
+                                                })
                                         })
-                                })
+                                }else{
+                                        res.json({ erro: "inexistente"})
+                                } 
                         }else{
-                                res.json({ erro: "inexistente"})
-                        } 
+                                res.json({ erro: "localerro"})
+                        }  
                 }else{
                         res.json({ erro: "inexistente"})
                 }  
-                
         }).catch((err) =>{
                 console.log("erro na validação de voto "+err) 
         })
@@ -110,11 +152,7 @@ router.post('/votar', async (req, res) => {
         // res.json({ ok: "Teste"})
 })
 
-
-
-
 router.get("/cadastrar", (req, res) => {
-        console.log("teste")
         const user = {
                 nome: 'Talles Tayson',
                 login: "ttayson",

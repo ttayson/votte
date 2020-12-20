@@ -15,6 +15,10 @@ const Eleicao = new Schema({
         type: String,
         require: false
     },
+    local: {
+        type: String,
+        require: true
+    },
     status: {
         type: Number,
         require: true,

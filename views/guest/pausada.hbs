@@ -9,11 +9,9 @@
   <div class="container">
     <div class="row heading heading-icon">
         <h2>Eleição</h2>
-        {{#each eleicao}}
-        <h3>{{nome}}</h3>
-        <input type="hidden" id="eleicaoID" value="{{_id}}">
-        {{else}}
-        {{/each}}
+        <h3>{{eleicao.nome}}</h3>
+        <input type="hidden" id="eleicaoID" value="{{eleicao._id}}">
+        <input type="hidden" id="local" value="{{eleicao.local}}">
     </div>
     <ul class="row" style="justify-content: center;">
 

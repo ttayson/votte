@@ -1,6 +1,6 @@
-nome,email,cpf,matricula,telefone,senha
-Talles Tayson,tallestayson@gmail.com,6677564428,5065,84996691907,1512
-Thalita de Melo,t-halita@gmail.com,9515465885,4550,84999551717,1212
-Maria Apresentação Saldanha de Farias,maria@gmail.com,14535125385,6565,84988387931,1235
-João Freitas,jmnfreire@gmail.com,4535615215,4545,8499551515,1234
-Maria Chica,kskjkdjs@vai.com,12365478912,1212,848484849845,1239
+nome,email,cpf,matricula,telefone,local,senha
+Talles Tayson,tallestayson@gmail.com,6677564428,5065,84996691907,ADC,1512
+Thalita de Melo,t-halita@gmail.com,9515465885,4550,84999551717,ADC,1212
+Maria Apresentação Saldanha de Farias,maria@gmail.com,14535125385,6565,84988387931,ADC,1235
+João Freitas,jmnfreire@gmail.com,4535615215,4545,8499551515,RMG,1234
+Maria Chica,kskjkdjs@vai.com,12365478912,1212,848484849845,RMG,1239

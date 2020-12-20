@@ -29,6 +29,10 @@ const Voto = new Schema({
     valido: {
         type: Number,
         default: 0
+    },
+    local: {
+        type: String,
+        require: true
     },  
     date: {
         type: Date,

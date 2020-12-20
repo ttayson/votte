@@ -91,6 +91,10 @@ router.post('/eleicao/edit/', userLogin, (req, res) => {
         if(!req.body.cargo || typeof req.body.cargo == undefined || req.body.cargo == null){
             erros.push({text: "Nome para o cargo inválido"})
         }
+        
+        if(!req.body.local || typeof req.body.local == undefined || req.body.local == null){
+            erros.push({text: "Nome para o local inválido"})
+        }
 
         if(!req.body.chapa || typeof req.body.chapa == undefined || req.body.chapa == null){
             erros.push({text: "Selecione pelo menos um candidato"})
@@ -105,6 +109,7 @@ router.post('/eleicao/edit/', userLogin, (req, res) => {
                 eleicao.nome = req.body.nome
                 eleicao.cargo = req.body.cargo
                 eleicao.descricao = req.body.descricao
+                eleicao.local = req.body.local
                 eleicao.chapa = req.body.chapa
 
         
@@ -169,6 +174,10 @@ router.post('/novaeleicao/add', userLogin, (req, res) => {
         erros.push({text: "Nome para o cargo inválido"})
     }
 
+    if(!req.body.local || typeof req.body.local == undefined || req.body.local == null){
+        erros.push({text: "Nome para o local inválido"})
+    }
+
     if(!req.body.chapa || typeof req.body.chapa == undefined || req.body.chapa == null){
         erros.push({text: "Selecione pelo menos uma chapa"})
     }
@@ -180,6 +189,7 @@ router.post('/novaeleicao/add', userLogin, (req, res) => {
         const novaEleicao = {
             nome: req.body.nome,
             cargo: req.body.cargo,
+            local: req.body.local,
             descricao: req.body.descricao,
             chapa: req.body.chapa
         }
@@ -476,6 +486,7 @@ router.post('/eleitor', UploadCSV.single('file'), (req, res) => {
                 cpf: eleitor[item]["cpf"],
                 matricula: eleitor[item]["matricula"],
                 telefone: eleitor[item]["telefone"],
+                local: eleitor[item]["local"],
                 senha: eleitor[item]["senha"]
             }
         

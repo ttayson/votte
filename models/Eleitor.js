@@ -11,6 +11,10 @@ const Eleitor = new Schema({
         type: String,
         require: false
     },
+    local: {
+        type: String,
+        require: true
+    },
     matricula: {
         type: Number,
         require: true,
@@ -23,7 +27,7 @@ const Eleitor = new Schema({
     },
     telefone: {
         type: Number,
-        require: true
+        require: false
     },
     ativo: {
         type: Number,
