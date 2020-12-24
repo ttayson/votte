@@ -109,7 +109,7 @@ router.post('/eleicao/edit/', userLogin, (req, res) => {
                 eleicao.nome = req.body.nome
                 eleicao.cargo = req.body.cargo
                 eleicao.descricao = req.body.descricao
-                eleicao.local = req.body.local
+                eleicao.local = req.body.local.toLowerCase()
                 eleicao.chapa = req.body.chapa
 
         
@@ -189,7 +189,7 @@ router.post('/novaeleicao/add', userLogin, (req, res) => {
         const novaEleicao = {
             nome: req.body.nome,
             cargo: req.body.cargo,
-            local: req.body.local,
+            local: req.body.local.toLowerCase(),
             descricao: req.body.descricao,
             chapa: req.body.chapa
         }

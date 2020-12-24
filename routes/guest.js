@@ -38,39 +38,18 @@ router.post("/login", (req, res, next) => {
         })(req, res, next)
 })
 
-router.get('/rmg', (req, res) => {
-        Eleicao.findOne({ local: "RMG"}).lean().populate("chapa").then((eleicao) =>{
-         
-        if (eleicao) {
-                
-                if (eleicao.status == 1){
+router.get('/votar', (req, res) => {
+        Eleicao.find({status: 1}).then((eleicao) =>{
 
-                        var ids = []
+                res.render("guest/lista", {layout: "basic", eleicao: eleicao});
 
-                        for ( item in eleicao.chapa) {
-                                ids.push({_id: eleicao.chapa[item]._id})
-                        }
-                        Chapa.find({_id:ids}).populate("candidatos").then((chapa) =>{
-
-                                res.render("guest/votar", {layout: "basic", eleicao: eleicao, chapa: chapa})
-                       
-                        })
-
-                }else if (eleicao.status == 2) {
-                        res.render("guest/pausada", {layout: "basic", eleicao: eleicao})
-                }else if (eleicao.status == 3) {
-                        res.render("guest/indisponivel", {layout: "basic", eleicao: eleicao})
-                }
-        }else{
-                res.render("guest/indisponivel", {layout: "basic", eleicao: eleicao})   
-        }   
-        
         })
         // res.json({ ok: "Teste"})
 })
 
-router.get('/adc', (req, res) => {
-        Eleicao.findOne({ local: "ADC"}).lean().populate("chapa").then((eleicao) =>{
+
+router.get('/votar/:local', (req, res) => {
+        Eleicao.findOne({ local: req.params.local}).lean().populate("chapa").then((eleicao) =>{
          
         if (eleicao) {
                 
@@ -89,7 +68,7 @@ router.get('/adc', (req, res) => {
 
                 }else if (eleicao.status == 2) {
                         res.render("guest/pausada", {layout: "basic", eleicao: eleicao})
-                }else if (eleicao.status == 3) {
+                }else if (eleicao.status == 0 || eleicao.status == 3) {
                         res.render("guest/indisponivel", {layout: "basic", eleicao: eleicao})
                 }
         }else{
