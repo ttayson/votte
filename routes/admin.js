@@ -5,11 +5,16 @@ require("../models/Candidato")
 require("../models/Eleicao")
 require("../models/Chapa")
 require("../models/Eleitor")
+require("../models/Voto")
+require("../models/Result")
+
 
 const Candidato =mongoose.model("candidato")
 const Eleicao =mongoose.model("eleicao")
 const Chapa =mongoose.model("chapa")
 const Eleitor =mongoose.model("eleitor")
+const Voto =mongoose.model("voto")
+const Resultado =mongoose.model("resultado")
 
 const { userLogin }= require("../helpers/userLogin")
 
@@ -28,26 +33,22 @@ const router = express.Router()
 
 
 router.get('/', userLogin, (req, res) => {
-    Eleicao.find({status:0}).populate("candidatos").then((eleicao) =>{
-        res.render("admin/index", {eleicao: eleicao})
+    Resultado.find().or([{ status: 1 }, { status: 2 }]).then((resultado) =>{
+        res.render("admin/index", {resultado: resultado})
     })
-
+    
 })
 
-router.get('/emandamento', (req, res) => {
-    res.render("admin/emandamento")
-})
 
-router.get('/calendar', (req, res) => {
-    res.render("admin/calendar")
-})
+router.get('/finalizadas', userLogin, (req, res) => {
+        Resultado.find({status: 3}).populate("eleicao").then((finalizadas) =>{
+            res.render("admin/finalizadas", {finalizadas: finalizadas })
+        })
 
-router.get('/finalizadas', (req, res) => {
-    res.render("admin/finalizadas")
 })
-
-router.get('/eleicao', (req, res) => {
-    Eleicao.find().populate("chapa").then((eleicao) =>{
+    
+router.get('/eleicao', userLogin, (req, res) => {
+    Eleicao.find({ status: { $ne: 3 }}).populate("chapa").then((eleicao) =>{
         res.render("admin/eleicao", {eleicao: eleicao})
     })
     
@@ -134,7 +135,7 @@ router.get('/novaeleicao', userLogin, (req, res) => {
     })
 })
 
-router.get('/eleicao/status/:id', (req, res) => {
+router.get('/eleicao/status/:id', userLogin, (req, res) => {
     Eleicao.findOne({_id:req.params.id}).then((eleicao) =>{
         if (eleicao.status == 0) {
             res.json({ info: 0})
@@ -149,16 +150,27 @@ router.get('/eleicao/status/:id', (req, res) => {
     })
 })
 
-router.post('/eleicao/status', (req, res) => {
+router.post('/eleicao/status', userLogin, (req, res) => {
    Eleicao.findOne({_id:req.body.id}).then((eleicao) =>{
         
                 eleicao.status = req.body.resp
 
                 eleicao.save().then(() => {
-                    console.log("Eleição iniciada")
+                    if(req.body.resp == 3){
+
+                        Resultado.updateOne({ eleicao: req.body.id},{ $set: { "status": 3}}).then(()=>{
+                            console.log("Aputação Finalizada")
+                          }).catch((err) =>{
+                              console.log(err)
+                          })
+
+                    }
+
+                    console.log("Eleição editada")
                     res.json({ info: req.body.resp})
+
                 }).catch((err) => {
-                        console.log("Erro ao Salvar no Banco (Start Eleição)")
+                        console.log("Erro ao Salvar no Banco (Edit Eleição)")
                 });
     })
 })
@@ -320,13 +332,13 @@ router.get("/chapas", userLogin, (req, res) => {
     })
 })
 
-router.get("/novachapa", (req, res) => {
+router.get("/novachapa", userLogin, (req, res) => {
     Candidato.find().then((candidatos) => {
         res.render("admin/novachapa", {candidatos: candidatos})
     })    
 })
 
-router.post('/novachapa/add', UploadImg.single('image'), async (req, res) => {
+router.post('/novachapa/add', UploadImg.single('image'), userLogin, async (req, res) => {
     // upload and resize image
     var filename = null
 
@@ -461,7 +473,7 @@ router.post('/chapas/edit/del', userLogin, (req, res) => {
             
 })
 
-router.get('/eleitor', (req, res) => {
+router.get('/eleitor', userLogin, (req, res) => {
     
       res.render("admin/eleitor")
         
@@ -469,7 +481,7 @@ router.get('/eleitor', (req, res) => {
     
 })
 
-router.post('/eleitor', UploadCSV.single('file'), (req, res) => {
+router.post('/eleitor', UploadCSV.single('file'), userLogin, (req, res) => {
 
     fs.readFile('./uploads/file.csv', async (err, data) => {
         if (err) {
@@ -486,7 +498,7 @@ router.post('/eleitor', UploadCSV.single('file'), (req, res) => {
                 cpf: eleitor[item]["cpf"],
                 matricula: eleitor[item]["matricula"],
                 telefone: eleitor[item]["telefone"],
-                local: eleitor[item]["local"],
+                local: eleitor[item]["local"].toLowerCase(),
                 senha: eleitor[item]["senha"]
             }
         

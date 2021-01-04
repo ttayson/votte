@@ -15,10 +15,17 @@ require("./config/Auth")(passport)
 const admin = require("./routes/admin")
 const guest = require("./routes/guest")
 
+//Cron
+const { result }= require("./helpers/result")
+const cron = require("node-cron");
+
 // Banco de Dados
 const mongoose = require('mongoose')
 
 const app = express()
+
+
+cron.schedule("* * * * *", () => result());
 
 const hbs = handlebars.create({
     defaultLayout: 'main', 

@@ -1,17 +1,12 @@
+
 		<ul class="nav menu">
-			<li ><a href="/admin"><em class="fa fa-dashboard">&nbsp;</em> Votar</a></li>
+			<li ><a href="/admin"><em class="fa fa-dashboard">&nbsp;</em> Resultado</a></li>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Votações<span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-1">
 					<li><a class="" href="/admin/finalizadas">
 						<span class="fa fa-arrow-right">&nbsp;</span> Finalizadas
-					</a></li>					
-					<li><a class="" href="/admin/chapas">
-						<span class="fa fa-arrow-right">&nbsp;</span> Chapas
-					</a></li>
-					<li><a class="" href="/admin/emandamento">
-						<span class="fa fa-arrow-right">&nbsp;</span> Em Andamento
 					</a></li>
 				</ul>
 			</li>
@@ -19,11 +14,14 @@
 				<em class="fa fa-navicon">&nbsp;</em> Cadastrar<span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-2">
-					<li><a class="" href="/admin/eleicao">
-						<span class="fa fa-arrow-right">&nbsp;</span> Eleição
-					</a></li>
 					<li><a class="" href="/admin/candidato">
 						<span class="fa fa-arrow-right">&nbsp;</span> Candidatos
+					</a></li>					
+					<li><a class="" href="/admin/chapas">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chapas
+					</a></li>
+					<li><a class="" href="/admin/eleicao">
+						<span class="fa fa-arrow-right">&nbsp;</span> Eleição
 					</a></li>
 					<li><a class="" href="/admin/eleitor">
 						<span class="fa fa-arrow-right">&nbsp;</span> Eleitores
@@ -47,46 +45,67 @@
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Votações Finalizadas</h1>
+				<h1 class="page-header">Eleições Finalizadas</h1>
 			</div>
 		</div><!--/.row-->
-		
-		<div class="panel panel-container">
-			<div class="row">
-				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
-					<div class="panel panel-teal panel-widget border-right">
-						<div class="row no-padding"><em class="fa fa-xl fa-shopping-cart color-blue"></em>
-							<div class="large">120</div>
-							<div class="text-muted">New Orders</div>
-						</div>
-					</div>
+
+		<br>
+		<br>
+
+		    
+			<div class="panel panel-container" style="display: flex;">
+			<div class="container">
+			
+				<div class="card-body" style="display: grid;">
+				<div class="table-responsive">
+				<table id="tabelacolaboradores" class="table table-bordered table-striped">
+					
+					<thead>
+					<tr>
+					<th scope="col" >Nome</th>
+					<th scope="col">Cargo</th>
+					<th scope="col">Resultados</th>
+					<th scope="col">Local</th>
+					<th scope="col">Descrição</th>
+					<th scope="col">Status</th>
+					</tr>
+
+					</thead>
+					<tbody>
+							{{#each finalizadas}}
+							<tr>
+						
+							<td>{{nome}}</td>
+							<td>{{cargo}}</td>
+							<td>
+								{{#each votos}}
+									<button type="button" class="btn btn-info btn-sm">{{chapa}} | {{voto}} Votos</button><br>
+								{{else}}
+								{{/each}} 
+
+							</td>
+							{{#each eleicao}}
+							<td>{{local}}</td>
+							<td>{{descricao}}</td>
+							<td>{{status}}</td>
+							{{else}}
+							{{/each}} 
+					</tr>
+
+					{{else}}
+	
+
+					{{/each}} 
+						
+					</tbody>
+
+				</table>
 				</div>
-				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
-					<div class="panel panel-blue panel-widget border-right">
-						<div class="row no-padding"><em class="fa fa-xl fa-comments color-orange"></em>
-							<div class="large">52</div>
-							<div class="text-muted">Comments</div>
-						</div>
-					</div>
 				</div>
-				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
-					<div class="panel panel-orange panel-widget border-right">
-						<div class="row no-padding"><em class="fa fa-xl fa-users color-teal"></em>
-							<div class="large">24</div>
-							<div class="text-muted">New Users</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
-					<div class="panel panel-red panel-widget ">
-						<div class="row no-padding"><em class="fa fa-xl fa-search color-red"></em>
-							<div class="large">25.2k</div>
-							<div class="text-muted">Page Views</div>
-						</div>
-					</div>
-				</div>
-			</div><!--/.row-->
-		</div>
-		
+
+			</div>
+			</div>
+               		
 	
 	</div>	<!--/.main-->
+

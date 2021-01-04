@@ -1,13 +1,10 @@
 
 		<ul class="nav menu">
-			<li class="active"><a href="/admin"><em class="fa fa-dashboard">&nbsp;</em> Votar</a></li>
+			<li class="active"><a href="/admin"><em class="fa fa-dashboard">&nbsp;</em> Resultado</a></li>
 			<li class="parent "><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Votações<span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-1">
-					<li><a class="" href="/admin/emandamento">
-						<span class="fa fa-arrow-right">&nbsp;</span> Em Andamento
-					</a></li>
 					<li><a class="" href="/admin/finalizadas">
 						<span class="fa fa-arrow-right">&nbsp;</span> Finalizadas
 					</a></li>
@@ -41,17 +38,17 @@
 				<li><a href="/admin">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Votar</li>
+				<li class="active">Resutlados</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Votar</h1>
+				<h1 class="page-header">Resultado</h1>
 			</div>
 		</div><!--/.row-->
 		
-			<div class="panel panel-container" style="display: flex;">
+			<div class="panel panel-container" style="display: block;">
 			<div class="container-fluid">
 				
 				{{!-- <div class="jumbotron">
@@ -59,28 +56,39 @@
 				<p><a class="btn btn-primary btn-lg" href="#" role="button">Leia Mais</a></p>
 				</div> --}}
 
+						
 
-						<div class="row">
-							{{#each eleicao}}
-								<div class="col-sm-6 col-md-3">
-									<div class="thumbnail">
-									<img data-src="holder.js/100%x200" alt="100%x200" src="https://img.ibxk.com.br/2019/06/11/11185614846206.jpg" data-holder-rendered="true" style="height: 200px; width: 100%; display: block;">
-									<div class="caption">
-										<h3>{{nome}}</h3>
-										<p> Cargo: {{cargo}}</p>
-										<p> Descrição: {{descricao}}</p>
-										<p><a href="#" class="btn btn-primary" role="button">Editar</a> <a href="#" class="btn btn-default" role="button">iniciar</a></p>
-									</div>
-									</div>
-								</div>
-							{{else}}
-								<h2>Nenhuma Eleição Iniciada</h2>
-							{{/each}}
+			{{#each resultado}}
+			<div class="panel panel-default ">
+						<div class="panel-heading">
+							{{nome}}
 						</div>
-
-			</div>
-            
+						{{#each votos}}
+						<div class="panel-body" style="display: block;">
+							<div class="col-md-12 no-padding">
+								<div class="row progress-labels">
+									<div class="col-sm-6">{{chapa}}</div>
+									<div class="col-sm-6" style="text-align: right;"><h4>Total de votos: {{voto}}</h4></div>
+								</div>
+								<div class="progress">
+									<div data-percentage="0%" style="width: 100%;" class="progress-bar progress-bar-blue" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+								</div>
+							</div>
+						</div>
+						{{else}}
+						{{/each}}
+					</div>
+					<br>
+				{{else}}
+				<h1> Resultado não disponível</h1>
+				{{/each}}
 		</div>
 		
 	
 	</div>	<!--/.main-->
+
+
+<script>
+	var teste = document.getElementById('teste').getAttribute('value')
+	console.log(teste)
+</script>
