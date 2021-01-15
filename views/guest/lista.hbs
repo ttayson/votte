@@ -7,15 +7,15 @@
 		<div class="row">
 			
 			<div class="col-12" style="text-align-last: center">
-				<img src="/logo-sindagua.png" class="img-fluid" alt="Responsive image">
-				<h1>Sistema de Votação Sindágua</h1>
+				<img src="/assec.png" class="img-fluid" alt="Responsive image">
+				<h1>Sistema de votação integrado ASSEC</h1>
 			</div>
 			<div class="[ col-xs-12 col-sm-offset-2 col-sm-8 ]">
 				<ul class="event-list">
 					{{#each eleicao}}
 							<li>
 								<time style="padding-top: 20px;">
-									<h2></h2><button onclick="window.location='/votar/{{local}}'" type="submit" class="btn btn-info">Ir para</button></h2>
+									<h2></h2><button onclick="window.location='/votar/{{_id}}'" type="submit" class="btn btn-info">Ir para</button></h2>
 								</time>
 								<div class="info">
 									<h2 class="title">{{nome}}</h2>
@@ -25,10 +25,14 @@
 								</div>
 							</li>
 						{{else}}
-						<button onclick="location.href='/resultado'"type="submit" class=" col-4 btn btn-info"></a><h4>Resultado</h4></button>
-
-						{{!-- <h1>Não disponíveis</h1> --}}
-            {{/each}}
+						
+						{{#if resultado}}
+							<button onclick="location.href='/resultado'"type="submit" class=" col-4 btn btn-info"></a><h4>Resultado</h4></button>
+						{{else}}
+							<h1>Nenhuma eleição disponível</h1>
+						{{/if}}    
+						        
+					{{/each}}
 				</ul>
 			</div>
 

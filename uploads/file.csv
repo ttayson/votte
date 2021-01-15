@@ -1,7 +1,7 @@
-nome,email,cpf,matricula,telefone,local,senha,situacao,nascimento
-Talles Tayson,tallestayson@gmail.com,06677564428,5065,84996691907,natal,XXXX,aposentado,30091988
-Thalita de Melo,t-halita@gmail.com,19515465885,4550,84999551717,natal,XXXX,aposentado,7101992
-Maria Apresentação Saldanha de Farias,maria@gmail.com,11453512538,6565,84988387931,natal,XXXX,aposentado,10081960
-João Freitas,jmnfreire@gmail.com,14535615215,4545,8499551515,natal,XXXX,aposentado,10091960
-Maria Chica,kskjkdjs@vai.com,12365478912,1212,848484849845,natal,XXXX,ativo,10101960
-Bruno Rafal,bruno@gmail.com,12023523532,2020,8499669696,natal,XXXX,ativo,10111960
+nome,email,cpf,matricula,telefone,local,senha,situacao,nascimento,diretoria,conselho de etica,conselho fiscal
+Talles Tayson,tallestayson@gmail.com,06677564428,5065,84996691907,natal,XXXX,aposentado,30091988,,,
+Thalita de Melo,t-halita@gmail.com,19515465885,4550,84999551717,roe,XXXX,aposentado,07101992,,,
+Maria Apresentação Saldanha de Farias,maria@gmail.com,11453512538,6565,84988387931,rmg,XXXX,aposentado,10081960,,,
+João Freitas,jmnfreire@gmail.com,14535615215,4545,8499551515,natal,XXXX,aposentado,10091960,,,
+Maria Chica,kskjkdjs@vai.com,12365478912,1212,848484849845,natal,XXXX,ativo,10101960,,,
+Bruno Rafal,bruno@gmail.com,12023523532,2020,8499669696,rmg,XXXX,ativo,10111960,,,

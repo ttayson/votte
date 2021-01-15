@@ -41,11 +41,14 @@ router.post("/login", (req, res, next) => {
 })
 
 router.get('/votar', (req, res) => {
-        Eleicao.find({status: 1}).then((eleicao) =>{
+        Eleicao.find({status: 1}).sort({local:1}).then((eleicao) =>{
+                Resultado.find({status: 3}).then((resultado) =>{
 
-                res.render("guest/lista", {layout: "basic", eleicao: eleicao});
-
+                        res.render("guest/lista", {layout: "basic", eleicao: eleicao, resultado: resultado});
+                
+                })
         })
+
         // res.json({ ok: "Teste"})
 })
 
@@ -58,8 +61,8 @@ router.get('/resultado', (req, res) => {
         // res.json({ ok: "Teste"})
 })
 
-router.get('/votar/:local', (req, res) => {
-        Eleicao.findOne({ local: req.params.local}).lean().populate("chapa").then((eleicao) =>{
+router.get('/votar/:_id', (req, res) => {
+        Eleicao.findOne({ _id: req.params._id}).lean().populate("chapa").then((eleicao) =>{
 
         if (eleicao) {
                 
@@ -90,20 +93,18 @@ router.get('/votar/:local', (req, res) => {
 })
 
 router.post('/votar', async (req, res) => {
-        await Eleitor.findOne({cpf:req.body[2]}).then((eleitor)=>{
+        await Eleitor.findOne({matricula:req.body[2]}).then((eleitor)=>{
                 if(eleitor){
                         // Traca de Local desativada
-                        // if(eleitor.local == req.body[4]){
-                                if((eleitor.matricula == req.body[3] && eleitor.situacao == "ativo") || (eleitor.nascimento == req.body[3] && eleitor.situacao == "aposentado")){
+                        if((eleitor.local == req.body[4]) || (req.body[4] == "geral")){
+                                if(eleitor.senha == req.body[3]){
+                                // if((eleitor.matricula == req.body[3] && eleitor.situacao == "ativo") || (eleitor.nascimento == req.body[3] && eleitor.situacao == "aposentado")){
                                         Eleicao.findOne({_id:req.body[1]}).then(async (eleicao) =>{
                                                 Voto.findOne().and([{ eleitor: eleitor._id }, { eleicao: req.body[1] }]).then(async (voto) =>{
                                                         if(voto){
                                                                 res.json({ erro: "votado"})    
                                                         }else{
-                                                                
                                                                 if(eleicao.status == 1){
-
-
                                                                         if(req.body[0] == 2 || req.body[0] == 3){
                                                                                 const novoVoto = {
                                                                                         ip: req.ip,
@@ -152,9 +153,9 @@ router.post('/votar', async (req, res) => {
                                 }else{
                                         res.json({ erro: "inexistente"})
                         } 
-                        // }else{
-                        //         res.json({ erro: "localerro"})
-                        // }  
+                        }else{
+                                res.json({ erro: "localerro"})
+                        }  
                 }else{
                         res.json({ erro: "ncadastrado"})
 
