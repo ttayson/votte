@@ -28,6 +28,14 @@ const Resultado = new Schema({
     votos: {
         type: Array,
         require: false
+    },
+    brancos: {
+        type: Number,
+        require: false
+    },
+    nulos: {
+        type: Number,
+        require: false
     }
 })
 

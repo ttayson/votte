@@ -14,10 +14,10 @@ const Resultado =mongoose.model("resultado")
 
   Eleicao.find().or([{ status: 1 }, { status: 2 }]).populate("chapa").then(async (eleicao) =>{
     
-    var _id = []
-    for ( item in eleicao) {
-        _id.push(eleicao[item]._id)
-    }  
+    // var _id = []
+    // for ( item in eleicao) {
+    //     _id.push(eleicao[item]._id)
+    // }  
         // Voto.find({ eleicao: { "$in" : _id }}).then((voto) =>{
          
         for ( item in eleicao) {
@@ -39,9 +39,23 @@ const Resultado =mongoose.model("resultado")
 
           })
 
-          Resultado.updateOne({ eleicao: eleicao[item]._id},{ $pull: { votos: { voto: { $gte: 0}}}}).then((teste)=>{
+          Voto.find().and([{ eleicao: eleicao[item]._id}, {valido: 2}]).then((brancos)=>{
+            Resultado.updateOne({ eleicao: eleicao[item]._id},{ $set: { brancos: brancos.length}}).then(()=>{
+              console.log("Bracos Atualizados")
+            })
+          })
+
+          Voto.find().and([{ eleicao: eleicao[item]._id}, {valido: 3}]).then((nulos)=>{
+            Resultado.updateOne({ eleicao: eleicao[item]._id},{ $set: { nulos: nulos.length}}).then(()=>{
+              console.log("Nulos Atualizados")
+            })
+          })
+
+
+          Resultado.updateOne({ eleicao: eleicao[item]._id},{ $pull: { votos: { voto: { $gte: 0}}}}).then(()=>{
             console.log("Limpado")
           })
+          
 
             for ( x in eleicao[item].chapa) {
       
@@ -53,11 +67,6 @@ const Resultado =mongoose.model("resultado")
                                 await Resultado.updateOne({ eleicao: eleicao[item]._id},{ $push: { votos: { $each: [ {chapa: eleicao[item].chapa[x].nome, voto: votos}]}}}).then((teste)=>{
                                   console.log("Escrito")
                                 })
-
-                                
-                                // Resultado.updateOne({ eleicao: eleicao[item]._id},{ $addToSet: { chapa: eleicao[item].chapa[x].nome}}).then((teste)=>{
-                                //   console.log("Escrito chapa")
-                                // })
 
                             }
       

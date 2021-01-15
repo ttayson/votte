@@ -40,8 +40,8 @@
 
     </ul>
   <div style="justify-content: center;" class="row">
-    <button class="btn btn-dangger"  onclick="votar('2')">Branco</button>
-    <button class="btn btn-dangger" style="margin-left: 15px;" onclick="votar('3')">Nulo</button>
+    <button class="btn btn-dangger"  onclick="votar(2)">Branco</button>
+    <button class="btn btn-dangger" style="margin-left: 15px;" onclick="votar(3)">Nulo</button>
   </div>
   </div>
 </section>
@@ -56,8 +56,8 @@
     const { value: formValues } = await Swal.fire({
     title: 'Confirme dados',
     html:
-      '<p style="text-align: left;">Matrícula</p><input id="swal-input1" placeholder="Matrícula" class="swal2-input" style="margin-top: 0; max-width: 100%;" type="number">' +
-      '<p style="text-align: left;">Senha</p><input id="swal-input2" placeholder="Senha" class="swal2-input" style="margin-top: 0;" type="password">',
+      '<p style="text-align: left;">CPF (somente números)</p><input id="swal-input1" placeholder="CPF" class="swal2-input" style="margin-top: 0; max-width: 100%;" type="number">' +
+      '<p style="text-align: left;">Matrícula ou data de nascimento (Aposentados)</p><input id="swal-input2" placeholder="somente números" class="swal2-input" style="margin-top: 0;" type="password">',
     focusConfirm: false,
     preConfirm: () => {
       return [
@@ -82,7 +82,7 @@
                Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Matrícula ou senha incorretos!',
+                  text: 'Dados não conferem!',
                   showConfirmButton: true,
                 })
 
@@ -100,6 +100,15 @@
                   title: 'Usuário ja votou',
                   text: 'Obrigado pela participação',
                   showConfirmButton: true,
+                })
+
+        }else if (retorno.erro == "ncadastrado"){
+                Swal.fire({
+                  icon: 'question',
+                  title: 'CPF não cadastrado',
+                  text: 'Erro? Entre em contato no link abaixo',
+                  showConfirmButton: true,
+                  footer: '<a href=https://api.whatsapp.com/send?phone=5584996691907&text=N%C3%A3o%20estou%20conseguindo%20votar.%20>Entrar em contato com o sindicato</a>'
                 })
 
         }else if (retorno.erro == "localerro"){

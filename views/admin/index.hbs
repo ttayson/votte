@@ -38,7 +38,7 @@
 				<li><a href="/admin">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Resutlados</li>
+				<li class="active">Resultados</li>
 			</ol>
 		</div><!--/.row-->
 		
@@ -47,44 +47,47 @@
 				<h1 class="page-header">Resultado</h1>
 			</div>
 		</div><!--/.row-->
-		
+					
 			<div class="panel panel-container" style="display: block;">
-			<div class="container-fluid">
-				
-				{{!-- <div class="jumbotron">
-				<h2>Votações em Andamento</h2>
-				<p><a class="btn btn-primary btn-lg" href="#" role="button">Leia Mais</a></p>
-				</div> --}}
+				<div class="container-fluid">
 
-						
-
-			{{#each resultado}}
-			<div class="panel panel-default ">
-						<div class="panel-heading">
-							{{nome}}
-						</div>
-						{{#each votos}}
-						<div class="panel-body" style="display: block;">
-							<div class="col-md-12 no-padding">
-								<div class="row progress-labels">
-									<div class="col-sm-6">{{chapa}}</div>
-									<div class="col-sm-6" style="text-align: right;"><h4>Total de votos: {{voto}}</h4></div>
-								</div>
-								<div class="progress">
-									<div data-percentage="0%" style="width: 100%;" class="progress-bar progress-bar-blue" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-								</div>
+						{{#each resultado}}
+						<div class="panel panel-default">
+						<div class="panel-heading">{{nome}}</div>
+						<div class="panel-body btn-margins">
+							<div class="col-md-12">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>Chapa</th>
+											<th>Votos</th>
+										</tr>
+									</thead>
+									<tbody>
+											{{#each votos}}
+										<tr>
+											<td>{{chapa}}</td>
+											<td>{{voto}}</td>
+										</tr>
+											{{else}}
+											<td>Nenhum voto Contabilizado</td>
+											<td>{{voto}}</td>
+											{{/each}}
+									</tbody>
+								</table>
+							<span><h4>Brancos: {{brancos}}</h4></span>
+							<span><h4>Nulos: {{nulos}}</h4></span>
 							</div>
 						</div>
-						{{else}}
-						{{/each}}
 					</div>
-					<br>
 				{{else}}
 				<h1> Resultado não disponível</h1>
 				{{/each}}
-		</div>
+
+				
 		
-	
+		</div>
+
 	</div>	<!--/.main-->
 
 

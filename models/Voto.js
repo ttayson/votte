@@ -33,6 +33,10 @@ const Voto = new Schema({
     local: {
         type: String,
         require: true
+    },
+    situcaoEleitor: {
+        type: String,
+        require: false
     },  
     date: {
         type: Date,

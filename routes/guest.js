@@ -7,6 +7,7 @@ require("../models/Chapa")
 require("../models/User")
 require("../models/Eleitor")
 require("../models/Voto")
+require("../models/Result")
 
 const Candidato = mongoose.model("candidato")
 const Eleicao = mongoose.model("eleicao")
@@ -14,6 +15,7 @@ const Chapa = mongoose.model("chapa")
 const User = mongoose.model("user")
 const Eleitor = mongoose.model("eleitor")
 const Voto = mongoose.model("voto")
+const Resultado = mongoose.model("resultado")
 const passport = require("passport")
 const bcrypt = require("bcryptjs")
 
@@ -47,10 +49,18 @@ router.get('/votar', (req, res) => {
         // res.json({ ok: "Teste"})
 })
 
+router.get('/resultado', (req, res) => {
+        Resultado.find({status: 3}).then((resultado) =>{
+
+                res.render("guest/resultado", {layout: "basic", resultado: resultado});
+
+        })
+        // res.json({ ok: "Teste"})
+})
 
 router.get('/votar/:local', (req, res) => {
         Eleicao.findOne({ local: req.params.local}).lean().populate("chapa").then((eleicao) =>{
-         
+
         if (eleicao) {
                 
                 if (eleicao.status == 1){
@@ -80,10 +90,11 @@ router.get('/votar/:local', (req, res) => {
 })
 
 router.post('/votar', async (req, res) => {
-        await Eleitor.findOne({matricula:req.body[2]}).then((eleitor)=>{
+        await Eleitor.findOne({cpf:req.body[2]}).then((eleitor)=>{
                 if(eleitor){
-                        if(eleitor.local == req.body[4]){
-                                if(eleitor.senha == req.body[3]){
+                        // Traca de Local desativada
+                        // if(eleitor.local == req.body[4]){
+                                if((eleitor.matricula == req.body[3] && eleitor.situacao == "ativo") || (eleitor.nascimento == req.body[3] && eleitor.situacao == "aposentado")){
                                         Eleicao.findOne({_id:req.body[1]}).then(async (eleicao) =>{
                                                 Voto.findOne().and([{ eleitor: eleitor._id }, { eleicao: req.body[1] }]).then(async (voto) =>{
                                                         if(voto){
@@ -91,21 +102,46 @@ router.post('/votar', async (req, res) => {
                                                         }else{
                                                                 
                                                                 if(eleicao.status == 1){
-                                                                        const novoVoto = {
-                                                                                ip: req.ip,
-                                                                                chapa: req.body[0],
-                                                                                eleitor: eleitor._id,
-                                                                                eleicao: req.body[1],
-                                                                                local: req.body[4],
-                                                                                valido: 1
+
+
+                                                                        if(req.body[0] == 2 || req.body[0] == 3){
+                                                                                const novoVoto = {
+                                                                                        ip: req.ip,
+                                                                                        chapa: null,
+                                                                                        eleitor: eleitor._id,
+                                                                                        eleicao: req.body[1],
+                                                                                        local: req.body[4],
+                                                                                        valido: req.body[0],
+                                                                                        situcaoEleitor: eleitor._id
+                                                                                }
+
+                                                                                await new Voto(novoVoto).save().then(() => {
+                                                                                        res.json({ ok: "valido"})
+                                                                                        console.log("Voto Anulado/Branco")
+                                                                                }).catch((err) => {
+                                                                                        console.log("Erro ao Salvar no Banco (Voto)"+err)
+                                                                                });
+                                                                                
+                                                                        }else{
+                                                                                
+                                                                                const novoVoto = {
+                                                                                        ip: req.ip,
+                                                                                        chapa: req.body[0],
+                                                                                        eleitor: eleitor._id,
+                                                                                        eleicao: req.body[1],
+                                                                                        local: req.body[4],
+                                                                                        valido: 1
+                                                                                }
+
+                                                                                await new Voto(novoVoto).save().then(() => {
+                                                                                        res.json({ ok: "valido"})
+                                                                                        console.log("Voto computado")
+                                                                                }).catch((err) => {
+                                                                                        console.log("Erro ao Salvar no Banco (Voto)"+err)
+                                                                                });
+
                                                                         }
-                                        
-                                                                        await new Voto(novoVoto).save().then(() => {
-                                                                                res.json({ ok: "valido"})
-                                                                                console.log("Voto computado")
-                                                                        }).catch((err) => {
-                                                                                console.log("Erro ao Salvar no Banco (Voto)"+err)
-                                                                        });
+                                                                        
                                                                                                         
                                                                 }
 
@@ -115,12 +151,13 @@ router.post('/votar', async (req, res) => {
                                         })
                                 }else{
                                         res.json({ erro: "inexistente"})
-                                } 
-                        }else{
-                                res.json({ erro: "localerro"})
-                        }  
+                        } 
+                        // }else{
+                        //         res.json({ erro: "localerro"})
+                        // }  
                 }else{
-                        res.json({ erro: "inexistente"})
+                        res.json({ erro: "ncadastrado"})
+
                 }  
         }).catch((err) =>{
                 console.log("erro na validação de voto "+err) 

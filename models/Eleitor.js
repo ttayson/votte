@@ -33,6 +33,14 @@ const Eleitor = new Schema({
         type: Number,
         default: 1
     },
+    situacao: {
+        type: String,
+        require: true
+    },
+    nascimento: {
+        type: String,
+        require: true
+    },
     senha: {
         type: String,
         require: true  
