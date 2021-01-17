@@ -21,6 +21,7 @@ const cron = require("node-cron");
 
 // Banco de Dados
 const mongoose = require('mongoose')
+require('dotenv').config()
 
 const app = express()
 
@@ -74,7 +75,7 @@ const hbs = handlebars.create({
 
     //mongoose
     mongoose.Promise = global.Promise;
-    mongoose.connect("mongodb://localhost/votta2", {
+    mongoose.connect('mongodb://'+process.env.USER+':'+process.env.PASS+'@mongo:27017/'+process.env.DB_NAME, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true
