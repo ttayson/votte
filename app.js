@@ -75,7 +75,7 @@ const hbs = handlebars.create({
 
     //mongoose
     mongoose.Promise = global.Promise;
-    mongoose.connect('mongodb://'+process.env.USER+':'+process.env.PASS+'@mongo:27017/'+process.env.DB_NAME, {
+    mongoose.connect('mongodb://mongo:27017/'+process.env.DB_NAME, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true
