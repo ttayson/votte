@@ -8,14 +8,19 @@
 	<link href="/adminpanel/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/adminpanel/css/font-awesome.min.css" rel="stylesheet">
 	<link href="/adminpanel/css/datepicker3.css" rel="stylesheet">
+	{{!-- <link href="/adminpanel/css/bootstrap-table.css" rel="stylesheet"> --}}
 	<link href="/adminpanel/css/styles.css" rel="stylesheet">
 	<link rel="stylesheet" href="/sweetalert2/dist/sweetalert2.min.css">
 
 
-	
+<link href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+<!-- Bootstrap core JavaScript-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Page level plugin JavaScript-->
+<script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
 
 
-	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 	<!--[if lt IE 9]>
@@ -60,7 +65,7 @@
 	{{{body}}}
 
 	
-	<script src="/adminpanel/js/jquery-1.11.1.min.js"></script>
+	{{!-- <script src="/adminpanel/js/jquery-1.11.1.min.js"></script> --}}
 	<script src="/adminpanel/js/bootstrap.min.js"></script>
 	<script src="/adminpanel/js/chart.min.js"></script>
 	<script src="/adminpanel/js/chart-data.js"></script>
@@ -70,17 +75,6 @@
 	<script src="/adminpanel/js/custom.js"></script>
 	<script src="/sweetalert2/dist/sweetalert2.min.js"></script>
 
-	{{!-- <script>
-		window.onload = function () {
-	var chart1 = document.getElementById("line-chart").getContext("2d");
-	window.myLine = new Chart(chart1).Line(lineChartData, {
-	responsive: true,
-	scaleLineColor: "rgba(0,0,0,.2)",
-	scaleGridLineColor: "rgba(0,0,0,.05)",
-	scaleFontColor: "#c5c7cc"
-	});
-};
-	</script> --}}
-		
+	
 </body>
 </html>

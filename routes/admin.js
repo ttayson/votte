@@ -473,9 +473,29 @@ router.post('/chapas/edit/del', userLogin, (req, res) => {
             
 })
 
-router.get('/eleitor', userLogin, (req, res) => {
-    
-      res.render("admin/eleitor")
+router.get('/eleitor',  (req, res) => {
+    Eleitor.find().then((eleitor) => {
+      res.render("admin/eleitor", {eleitor: eleitor} )
+
+    })
+
+router.post('/eleitor/pass',  (req, res) => {
+    Eleitor.findOne({_id: req.body.id}).then((eleitor) => {
+        const NewPass = random(1000, 9999)
+        function random(low, high) {
+            return Math.floor(Math.random() * (high - low + 1) + low)
+        }
+
+        Eleitor.updateOne({ _id: req.body.id},{ $set: { "senha": NewPass}}).then(()=>{
+            console.log("Senha Eleitor Atualizada")
+            res.json({ ok: "passok", Pass: NewPass})
+          }).catch((err) =>{
+              console.log("Erro na Atualização de Senha do Eleitor"+ err)
+          })
+
+    })
+
+    })
         
       
     

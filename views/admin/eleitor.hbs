@@ -1,3 +1,4 @@
+		
 		<ul class="nav menu">
 			<li ><a href="/admin"><em class="fa fa-dashboard">&nbsp;</em> Resultado</a></li>
 			<li class="parent "><a data-toggle="collapse" href="#sub-item-1">
@@ -62,7 +63,10 @@
 			
 				<div class="card-body" style="display: grid;">
 				<div class="table-responsive">
-				<table id="tabelacolaboradores" class="table table-bordered table-striped">
+					
+				
+				<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
 					
 					<thead>
 					<tr>
@@ -70,7 +74,8 @@
 					<th scope="col">Matrícula</th>
 					<th scope="col">CPF</th>
 					<th scope="col">Celular</th>
-					<th scope="col">Ação</th>
+					<th scope="col">Local</th>
+					<th scope="col">Reset Senha</th>
 
 					</tr>
 
@@ -78,24 +83,17 @@
 					<tbody>
                   {{#each eleitor}}
                   <tr>
-                    <td>{{Nome}}</td>
-                    <td>{{Matricula}}</td>
-										<td>{{CPF}}</td>
-                    <td>{{Telefone}}</td>
-					<td>
-
-								<span class="btn btn-primary btn-sm" onclick="window.location='/admin/chapas/edit/{{id}}'">
-									<input type="hidden" id="" name="id" value="{{id}}">
-									<i class="fa fa-pencil"></i>
-								</span>
-
-								<span class="btn btn-danger btn-sm" onclick="deletar('{{id}}')">
-									<input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
-									<i class="fa fa fa-trash-o"></i>
-								</span>
-
-					</td>
-
+                    <td>{{nome}}</td>
+                    <td>{{matricula}}</td>
+										<td>{{cpf}}</td>
+                    <td>{{telefone}}</td>
+										<td>{{local}}</td>
+										<td style="text-align: -webkit-center;">
+											<span class="btn btn-primary btn-sm" onclick="pass('{{id}}')">
+												<input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
+												<i class="fa fa-pencil"></i>
+											</span>
+										</td>
 						</tr>
 
 					{{else}}
@@ -117,5 +115,61 @@
 	
 	</div>	<!--/.main-->
 
+<script>
+	$(function () {
+    $('#dataTable').DataTable({
+      "pageLength": 10,
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": false,
+      "autoWidth": false,
+      });
+  });
+</script>
+<script>
+    $(document).ready(function() {
+          $('#dataTable').DataTable();
+    });
 
-	
+		function pass(id) {
+
+							Swal.fire({
+								title: 'Resetar senha do eleitor?',
+								showDenyButton: true,
+								showCancelButton: false,
+								confirmButtonText: `Sim`,
+								denyButtonText: `Não`,
+							}).then((result) => {
+									if (result.isConfirmed) {
+											$.ajax({
+												url:'/admin/eleitor/pass',
+												method:'POST',
+												contentType: 'application/json',
+												dataType: 'json',
+												data: JSON.stringify({"resp": 1, "id": id})
+											}).done(function(retorno){
+												if (retorno.ok == 'passok'){
+														Swal.fire({
+															icon: 'success',
+															title: 'Senha Atualizada Para: '+ retorno.Pass,
+															text: "Informe o eleitor",
+															showConfirmButton: true,
+														})
+												}
+											})
+
+									} else if (result.isDenied) {
+										Swal.fire('Senha não foi alterada', '', 'info')
+									}
+							})
+
+
+									
+		
+	}
+
+		
+</script>
+
