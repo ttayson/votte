@@ -20,15 +20,43 @@
 
       <li class="col-12 col-md-6 col-lg-4">
           <div class="cnt-block equal-hight" style="height: 400px;">
+            {{#if imageName}}
             <figure><img src="/images/{{imageName}}" class="img-responsive" alt=""></figure>
+						{{else}}
+            <figure><img src="/images/default-avatar-male.png" class="img-responsive" alt=""></figure>
+						{{/if}}  
             <h3><a>Chapa: {{nome}}</a></h3>
-            <p>{{descricao}}</p>
             {{#each candidatos}}
             <span> {{nome}}</span>
             {{else}}
             {{/each}}
               <ul class="follow-us clearfix">
               <li>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{id}}">
+                  Descrição da Chapa
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Informações da Chapa</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        {{descricao}}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div><br><br>  
                 <button class="btn btn-primary" onclick="votar('{{id}}')"> Votar</button>
               </li>
             </ul>
@@ -109,7 +137,7 @@
                   title: 'Matrícula não cadastrada',
                   text: 'Erro? Entre em contato no link abaixo',
                   showConfirmButton: true,
-                  footer: '<a href=https://api.whatsapp.com/send?phone=5584996691907&text=N%C3%A3o%20estou%20conseguindo%20votar.%20>Entrar em contato com o sindicato</a>'
+                  footer: '<a href=https://api.whatsapp.com/send?phone=5584996691907&text=N%C3%A3o%20estou%20conseguindo%20votar.%20>Entrar em contato</a>'
                 })
 
         }else if (retorno.erro == "localerro"){

@@ -1,0 +1,148 @@
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <div class="container">
+		<div class="row">
+			
+			<div class="col-12" style="text-align-last: center">
+				<img src="/assec.png" class="img-fluid" alt="Responsive image">
+				<h4>Sistema de votação integrado ASSEC</h4>
+			</div>
+
+
+<section>
+<div class="container">
+
+		<div class="row mbr-justify-content-center">
+						{{#each eleicao}}
+            <div class="col-xl-6 mbr-col-md-12" onclick="window.location='/votar/{{_id}}'" type="submit">
+                <div class="wrap">
+                    <div class="ico-wrap">
+                        <span class="mbr-iconfont fa-angle-double-right fa"></span>
+                    </div>
+                    <div class="text-wrap vcenter">
+                        <h2 class="mbr-fonts-style mbr-bold mbr-section-title3 display-5">{{nome}}</h2>
+                        <p class="mbr-fonts-style text1 mbr-text display-6">Cargo: {{cargo}}</p>
+
+                    </div>
+                </div>
+            </div> 
+						{{else}}
+                        {{#if resultado}}
+                            <div class="row" style="justify-content: center;">
+                                <button onclick="location.href='/resultado'"type="submit" class="btn btn-info"><h3>Resultado</h3></button>
+
+                            </div>
+						{{else}}
+							<h1>Nenhuma eleição disponível</h1>
+						{{/if}}    
+
+						{{/each}} 	  
+   
+
+
+      
+
+            
+        </div>
+
+</div>
+
+</section>
+
+
+
+	
+<style>
+
+	h4 {
+			color: rgb(186, 194, 196);	
+			font-size: 20px;
+			font-weight: 20;
+			text-align: center;
+			margin: 0 0 0px;
+			margin-top: 10px;
+
+			font-family: 'Lato', sans-serif;
+	
+	}
+
+
+.row {
+	margin-top: 35px;
+    
+}
+.row h3 {
+        color: rgb(214, 220, 221);	
+        font-size: 28px;
+        line-height: 30px;
+        font-weight: 400;
+        text-align: center;
+}
+	section {
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    background-color: #f1f4fa;
+}
+
+.wrap {
+    display: flex;
+    background: white;
+    padding: 1rem 1rem 1rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 7px 7px 30px -5px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+
+.wrap:hover {
+    background: linear-gradient(135deg,#6394ff 0%,#0a193b 100%);
+    color: white;
+}
+
+.ico-wrap {
+    margin: 0;
+}
+
+.mbr-iconfont {
+    font-size: 4.5rem !important;
+    color: #313131;
+    margin: 1rem;
+    padding-right: 1rem;
+}
+.vcenter {
+    margin: 0;
+}
+
+.mbr-section-title3 {
+    text-align: left;
+}
+h2 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.display-5 {
+    font-family: 'Source Sans Pro',sans-serif;
+    font-size: 1.4rem;
+}
+.mbr-bold {
+    font-weight: 700;
+}
+
+ p {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    line-height: 25px;
+		text-align: left;
+}
+.display-6 {
+    font-family: 'Source Sans Pro',sans-serif;
+    font-size: 1re}
+</style>
