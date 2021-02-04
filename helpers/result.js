@@ -12,7 +12,7 @@ const Eleicao =mongoose.model("eleicao")
 const Voto =mongoose.model("voto")
 const Resultado =mongoose.model("resultado")
 
-  Eleicao.find().or([{ status: 1 }, { status: 2 }]).populate("chapa").then(async (eleicao) =>{
+  Eleicao.find().or([{ status: 1 }, { status: 2 }, { status: 3 }]).populate("chapa").then(async (eleicao) =>{
     
     // var _id = []
     // for ( item in eleicao) {
