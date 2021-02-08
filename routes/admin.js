@@ -33,7 +33,7 @@ const router = express.Router()
 
 
 router.get('/', userLogin, (req, res) => {
-    Resultado.find().or([{ status: 1 }, { status: 2 }]).then((resultado) =>{
+    Resultado.find({ status: 1 }).then((resultado) =>{
         res.render("admin/index", {resultado: resultado})
     })
     
@@ -41,7 +41,7 @@ router.get('/', userLogin, (req, res) => {
 
 
 router.get('/finalizadas', userLogin, (req, res) => {
-        Resultado.find({status: 3}).populate("eleicao").then((finalizadas) =>{
+        Resultado.find({status: 2}).populate("eleicao").then((finalizadas) =>{
             res.render("admin/finalizadas", {finalizadas: finalizadas })
         })
 
@@ -158,7 +158,7 @@ router.post('/eleicao/status', userLogin, (req, res) => {
                 eleicao.save().then(() => {
                     if(req.body.resp == 3){
 
-                        Resultado.updateOne({ eleicao: req.body.id},{ $set: { "status": 3}}).then(()=>{
+                        Resultado.updateOne({ eleicao: req.body.id},{ $set: { "status": 2}}).then(()=>{
                             console.log("Aputação Finalizada")
                           }).catch((err) =>{
                               console.log(err)
