@@ -1,0 +1,226 @@
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container">
+          <div class="col-12" style="text-align-last: center">
+            <img src="/assec.png" class="img-fluid" alt="Responsive image">
+            <h4>Sistema de votação integrado ASSEC</h4>
+        </div>
+</div>
+
+
+
+<div class="container">			
+	<div class="">
+		<form id="formvote" >
+	 {{#each eleicao}}
+		<div class="event-list " data-toggle="buttons">
+		<h3>{{nome}}</h3>
+			{{#each chapa}}
+        
+        {{rendervoto this ...this._id}}
+
+      {{else}}
+      {{/each}}
+		
+		</div>
+    {{else}}
+    {{/each}}
+
+	<button type="button" class="btn btn-primary" onclick="votar('{{id}}')"> VOTAR </button> <br><br>
+
+</form>
+</div>
+</div>
+
+
+
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script>
+
+  async function votar (id){
+
+	var form = $('form').serializeArray()
+  var queryParamsString = window.location.href.split('/')[5]
+  var MatParams = null
+  var Matabel = ''
+
+	if (form.length == 4){
+
+    if(queryParamsString != undefined){
+      MatParams = 'type="hidden" value="'+queryParamsString+'" disabled '
+      Matabel = ' '
+    }else{
+      MatParams = ' '
+      Matabel = '<p style="text-align: left;">Matrícula</p>'
+    }
+
+    const { value: formValues } = await Swal.fire({
+    title: 'Confirme dados',
+    html:
+      ''+Matabel+'<input id="swal-input1" placeholder="Matrícula" '+ MatParams + 'class="swal2-input" style="margin-top: 0; max-width: 100%;" type="number">' +
+      '<p style="text-align: left;">Senha</p><input id="swal-input2" placeholder="Senha" class="swal2-input" style="margin-top: 0;" type="password">',
+    focusConfirm: true,
+    preConfirm: () => {
+      return [
+				$('form').serializeArray(),
+        document.getElementById('swal-input1').value,
+        document.getElementById('swal-input2').value,
+      ]
+    }
+  })
+  if (formValues){
+      $.ajax({
+        url:'/teste',
+        method:'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formValues)
+      }).done(function(retorno){
+        reload()
+        async function reload(){
+
+        if (retorno.erro == "inexistente"){
+
+               Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Dados não conferem!',
+                  showConfirmButton: true,
+                })
+
+        }else if (retorno.ok == "valido"){
+               await Swal.fire({
+                  icon: 'success',
+                  title: 'Voto validado',
+                  text: 'Obrigado pela participação',
+                  showConfirmButton: true,
+                })
+
+                window.location.href = "/entrar/"
+
+
+        }else if (retorno.erro == "votado"){
+              await Swal.fire({
+                  icon: 'error',
+                  title: 'Usuário ja votou',
+                  text: 'Obrigado pela participação',
+                  showConfirmButton: true,
+                })
+                window.location.href = "/entrar/"
+
+
+        }else if (retorno.erro == "ncadastrado"){
+                Swal.fire({
+                  icon: 'question',
+                  title: 'Matrícula não cadastrada',
+                  text: 'Erro? Entre em contato no link abaixo',
+                  showConfirmButton: true,
+                  footer: '<a href=https://api.whatsapp.com/send?phone=5584996691907&text=N%C3%A3o%20estou%20conseguindo%20votar.%20>Entrar em contato</a>'
+                })
+
+        }else if (retorno.erro == "localerro"){
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Local de votação Inválido',
+                  text: '',
+                  showConfirmButton: true,
+                  footer: '<a href=/entrar/ >Corrigir local </a>'
+
+                })
+         }
+        }
+      })
+  }  
+ 
+  }else{
+		Swal.fire({
+                  icon: 'error',
+                  title: 'Voto Pendente',
+                  text: 'Necessario votar em todos os pleitos',
+                  showConfirmButton: true,
+                })
+	}
+}
+    
+
+</script>
+
+
+<style>
+
+
+ .teste {
+	 background-color: #B3E5FC;
+	 border-radius: 5px;
+ }
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+h1, .h1, h2, .h2, h3, .h3 {
+		margin: 0;
+		padding: 0;
+    margin-top: 0px;
+    margin-bottom: 0px;
+		padding-bottom: 10px;
+}
+
+.btn-primary {
+font-size: 30px;
+}
+
+	
+.event-list {
+	background-color: #F5F5F5;
+	list-style: none;
+	font-family: 'Lato', sans-serif;
+	margin: 10px 10px 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+;
+	}
+.event-list > div {
+	display: inline-flex;
+	padding: 0px;
+	margin: 0px 5px 5px;
+	width: 300px;
+}
+
+.event-list > div > p{
+padding-left: 5px;
+}
+
+	.event-list > div > time {
+	display: inline-block;
+	min-width: 25%;
+	color: rgb(255, 255, 255);
+	background-color: #1565c0;
+	border-radius: 5px;
+	padding: 0px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+	.event-list > div > time h4 {
+		color: rgb(255, 255, 255);	
+		font-size: 15px;
+		font-weight: 400;
+		text-align: center;
+		margin: 5 0 0px;
+}
+
+  .btn span.glyphicon {    			
+	opacity: 0;				
+}
+.btn.active span.glyphicon {				
+	opacity: 1;				
+}
+
+.btn.active {
+	background-color: rgb(25, 149, 231);
+}
+</style>
