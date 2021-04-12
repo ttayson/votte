@@ -126,11 +126,25 @@ app.set("views", "views");
 mongoose.Promise = global.Promise;
 // mongoose.connect('mongodb://'+process.env.DB_USER+':'+process.env.DB_PASS+'@ttayson.cf/'+process.env.DB_NAME, {
 mongoose
-  .connect("mongodb://localhost/assec", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
+  .connect(
+    "mongodb://" +
+      process.env.DB_USER +
+      ":" +
+      process.env.DB_PASS +
+      "@" +
+      process.env.DOMAIN +
+      ":" +
+      process.env.DB_PORT +
+      "/" +
+      process.env.DB_NAME +
+      "?authSource=admin",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      useCreateIndex: true,
+    }
+  )
   .then(() => {
     console.log("Mongo Conectado");
   })
