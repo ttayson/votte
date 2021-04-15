@@ -71,7 +71,7 @@ const hbs = handlebars.create({
             data.numero +
             '</h1></time><div class="row" style="display: inline-grid; width: inherit;"><p style="white-space: normal;">' +
             data.nome +
-            '</p><p style="white-space: normal; font-size: 1.1rem; text-align-last: left; padding-left: 7%;"><b>' +
+            '</p><p style="white-space: normal; font-size: 1.1rem; text-align: left; padding-left: 7%;"><b>' +
             data.candidatos[0].cargo +
             ": " +
             data.candidatos[0].nome +
@@ -95,7 +95,7 @@ const hbs = handlebars.create({
             data.numero +
             '</h1></time><div class="row" style="display: inline-grid; width: inherit;"><p style="white-space: normal;">' +
             data.nome +
-            '</p><p style="white-space: normal; font-size: 1.1rem; text-align-last: left; padding-left: 7%;"><b>' +
+            '</p><p style="white-space: normal; font-size: 1.1rem; text-align: left; padding-left: 7%;"><b>' +
             data.candidatos[0].cargo +
             ": " +
             data.candidatos[0].nome +
