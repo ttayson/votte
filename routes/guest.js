@@ -351,33 +351,33 @@ router.get("/resultado", (req, res) => {
 //   var ip = req.ip;
 // });
 
-router.get("/cadastrar", (req, res) => {
-  const user = {
-    nome: "Talles Tayson",
-    login: "ttayson",
-    email: "tallestayson@gmail.com",
-    senha: "123456",
-  };
+// router.get("/cadastrar", (req, res) => {
+//   const user = {
+//     nome: "Talles Tayson",
+//     login: "ttayson",
+//     email: "tallestayson@gmail.com",
+//     senha: "",
+//   };
 
-  bcrypt.genSalt(10, (erro, salt) => {
-    bcrypt.hash(user.senha, salt, (erro, hash) => {
-      if (erro) {
-        console.log("Erro ao salvar usuário");
-      } else {
-        user.senha = hash;
+//   bcrypt.genSalt(10, (erro, salt) => {
+//     bcrypt.hash(user.senha, salt, (erro, hash) => {
+//       if (erro) {
+//         console.log("Erro ao salvar usuário");
+//       } else {
+//         user.senha = hash;
 
-        new User(user)
-          .save()
-          .then(() => {
-            console.log("Usuário Cadastrado");
-            res.redirect("/login");
-          })
-          .catch((err) => {
-            console.log("Erro ao Salvar no Banco (User)");
-          });
-      }
-    });
-  });
-});
+//         new User(user)
+//           .save()
+//           .then(() => {
+//             console.log("Usuário Cadastrado");
+//             res.redirect("/login");
+//           })
+//           .catch((err) => {
+//             console.log("Erro ao Salvar no Banco (User)");
+//           });
+//       }
+//     });
+//   });
+// });
 
 module.exports = router;
