@@ -65,13 +65,45 @@ const hbs = handlebars.create({
             data._id +
             '"></div>'
         );
+      } else if (data.candidatos[2] != undefined) {
+        return new Handlebars.SafeString(
+          '<div class="teste btn"><time><h4>Chapa</h4><h1>' +
+            data.numero +
+            '</h1></time><div class="row" style="display: inline-grid; width: inherit;"><p style="white-space: normal;">' +
+            data.nome +
+            '</p><p style="white-space: normal; font-size: 1.1rem; text-align-last: left; padding-left: 7%;"><b>' +
+            data.candidatos[0].cargo +
+            ": " +
+            data.candidatos[0].nome +
+            "<br>" +
+            data.candidatos[1].cargo +
+            ": " +
+            data.candidatos[1].nome +
+            "<br>" +
+            data.candidatos[2].cargo +
+            ": " +
+            data.candidatos[2].nome +
+            '</b></p></div><input type="radio" name="' +
+            eleicaoID +
+            '" value="' +
+            data._id +
+            '"></div>'
+        );
       } else {
         return new Handlebars.SafeString(
           '<div class="teste btn"><time><h4>Chapa</h4><h1>' +
             data.numero +
-            "</h1></time><p>" +
+            '</h1></time><div class="row" style="display: inline-grid; width: inherit;"><p style="white-space: normal;">' +
             data.nome +
-            '</p><input type="radio" name="' +
+            '</p><p style="white-space: normal; font-size: 1.1rem; text-align-last: left; padding-left: 7%;"><b>' +
+            data.candidatos[0].cargo +
+            ": " +
+            data.candidatos[0].nome +
+            "<br>" +
+            data.candidatos[1].cargo +
+            ": " +
+            data.candidatos[1].nome +
+            '</b></p></div><input type="radio" name="' +
             eleicaoID +
             '" value="' +
             data._id +

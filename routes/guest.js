@@ -86,17 +86,27 @@ router.get("/voto/:local/:mat?", (req, res) => {
   })
     .sort({ nome: 1 })
     .lean()
-    .populate({ path: "chapa", options: { sort: { numero: 1 } } })
+    .populate({
+      path: "chapa",
+      populate: { path: "candidatos" },
+      options: { sort: { numero: 1 } },
+    })
     .then((eleicao) => {
-      res.render("guest/voto", {
-        layout: "basic",
-        eleicao: eleicao,
-      });
+      if (eleicao.length == 3) {
+        res.render("guest/voto1", {
+          layout: "basic",
+          eleicao: eleicao,
+        });
+      } else {
+        res.render("guest/voto", {
+          layout: "basic",
+          eleicao: eleicao,
+        });
+      }
     });
 });
 
 router.post("/teste", async (req, res) => {
-  console.log(req.body);
   await Eleitor.findOne({ matricula: req.body[1] })
     .then(async (eleitor) => {
       if (eleitor) {
@@ -106,13 +116,26 @@ router.post("/teste", async (req, res) => {
           await Eleicao.findOne({
             _id: req.body[0][i].name,
           }).then((checkLocal) => {
-            if (
-              checkLocal.local == eleitor.local ||
-              checkLocal.local == "geral"
-            ) {
-              console.log("local correto");
+            if (req.body[0].length == 3) {
+              if (
+                eleitor.local != "roe" &&
+                eleitor.local != "rse" &&
+                eleitor.local != "rsc" &&
+                eleitor.local != "rao"
+              ) {
+                console.log("local correto 2");
+              } else {
+                error.push({ error: "erro" });
+              }
             } else {
-              error.push({ error: "erro" });
+              if (
+                checkLocal.local == eleitor.local ||
+                checkLocal.local == "geral"
+              ) {
+                console.log("local correto");
+              } else {
+                error.push({ error: "erro" });
+              }
             }
           });
         }
@@ -167,9 +190,9 @@ router.post("/teste", async (req, res) => {
             }
           }
 
-          if (countCheckVoto > 3) {
+          if (countCheckVoto >= 3) {
             res.json({ erro: "votado" });
-          } else if (countVoto > 3) {
+          } else if (countVoto >= 3) {
             res.json({ ok: "valido" });
           }
         } else {
