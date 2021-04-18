@@ -2,11 +2,8 @@
 
 
 <div class="wrapper">
-      <h2 class="active">Tempo Restante: <b><div id="countdown"></div></b></h2>
-    <input type="hidden" id="endtime" value="{{EndTime}}"></imput> 
   <div id="formContent">
     <!-- Tabs Titles -->
-
     <h2 class="active"> Votação Assec </h2>
     <!-- Icon -->
     <div class="fadeIn first">
@@ -16,95 +13,12 @@
 
     <!-- Login Form -->
     <form >
-      <input type="number" id="mat"  name="mat" placeholder="Matrícula" onkeydown = "if (event.keyCode == 13) join()" required>
-      <br>
-      <input  type="reset" class="fadeIn fourth" value="Entrar" onclick="join()" >
+      <input  type="reset" class="fadeIn fourth" value="Resultado" onclick="location.href='/resultado'">
     </form>
 
-    <!-- Remind Passowrd -->
-    <div id="formFooter">
-      <a class="underlineHover" href="https://api.whatsapp.com/send?phone=5584996691907&text=N%C3%A3o%20estou%20conseguindo%20votar.%20">Problemas de acesso?</a>
-    </div>
 
   </div>
 </div>
-
-<script>
-
-  function countDownTimer() {
-  const difference = document.getElementById('endtime').value - +new Date();
-
-  let remaining = "Acabou o tempo!";
-
-  if (difference > 0) {
-    const parts = {
-      h: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      min: Math.floor((difference / 1000 / 60) % 60),
-      s: Math.floor((difference / 1000) % 60),
-    };
-    remaining = Object.keys(parts).map(part => {
-    return `${parts[part]} ${part}`;
-    }).join(" ");
-  }else{
-    window.location.href = "/entrar/"
-  }
-
-  document.getElementById("countdown").innerHTML = remaining;
-}
-
-countDownTimer()
-setInterval(countDownTimer, 1000)
-
-</script>
-
-<script>
-
-function join (){
-
-event.preventDefault()
-
-var value = []
-
-value.push({mat: document.getElementById('mat').value})
-console.log(value)
-if(value){
-      $.ajax({
-        url:'/entrar',
-        method:'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(value)
-      }).done(function(retorno){
-     if (retorno.erro == "ncadastrado"){
-                Swal.fire({
-                  icon: 'question',
-                  title: 'Matrícula não cadastrada',
-                  text: 'Erro? Entre em contato no link abaixo',
-                  showConfirmButton: true,
-                  footer: '<a href=https://api.whatsapp.com/send?phone=5584996691907&text=N%C3%A3o%20estou%20conseguindo%20votar.%20>Entrar em contato</a>'
-                })
-                
-     } else if (retorno.erro == "votado"){
-               Swal.fire({
-                  icon: 'error',
-                  title: 'Usuário ja votou',
-                  text: 'Obrigado pela participação',
-                  showConfirmButton: true,
-                })
-
-     } else if (retorno.local){
-       
-       window.location.href = "/voto/"+ retorno.local+"/"+ retorno.mat;
-
-     }
-
-      })
-
-
-}
-
-}  
-
-</script>
 
 
 <style>

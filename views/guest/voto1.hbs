@@ -6,6 +6,8 @@
           <div class="col-12" style="text-align-last: center">
             <img src="/assec.png" class="img-fluid" alt="Responsive image">
             <h4>Sistema de votação ASSEC</h4>
+            <h4>Tempo Restante: <b><div id="countdown"></div></b></h4>
+            <input type="hidden" id="endtime" value="{{EndTime}}"></imput>            
         </div>
 </div>
 
@@ -37,6 +39,34 @@
 
 
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script>
+
+  function countDownTimer() {
+  const difference = document.getElementById('endtime').value - +new Date();
+
+  let remaining = "Acabou o tempo!";
+
+  if (difference > 0) {
+    const parts = {
+      h: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      min: Math.floor((difference / 1000 / 60) % 60),
+      s: Math.floor((difference / 1000) % 60),
+    };
+    remaining = Object.keys(parts).map(part => {
+    return `${parts[part]} ${part}`;
+    }).join(" ");
+  }else{
+    window.location.href = "/entrar/"
+  }
+
+  document.getElementById("countdown").innerHTML = remaining;
+}
+
+countDownTimer()
+setInterval(countDownTimer, 1000)
+
+</script>
 <script>
 
   async function votar (id){
@@ -72,7 +102,7 @@
   })
   if (formValues){
       $.ajax({
-        url:'/teste',
+        url:'/votte',
         method:'POST',
         contentType: 'application/json',
         data: JSON.stringify(formValues)
@@ -130,7 +160,7 @@
                 })
 
         }else if (retorno.erro == "localerro"){
-               await Swal.fire({
+              await Swal.fire({
                   icon: 'error',
                   title: 'Local de votação Inválido',
                   text: '',

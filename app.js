@@ -27,7 +27,8 @@ require("dotenv").config();
 
 const app = express();
 
-// cron.schedule("* * * * *", () => result());
+//Cron Result
+cron.schedule("* * * * *", () => result());
 
 const hbs = handlebars.create({
   defaultLayout: "main",
@@ -136,6 +137,8 @@ app.use((req, res, next) => {
   res.locals.error_msg = req.flash("error_msg");
   res.locals.error = req.flash("error");
   res.locals.user = req.user || null;
+  res.locals.StartTime = +new Date(process.env.START_TIME);
+  res.locals.EndTime = +new Date(process.env.END_TIME);
   next();
 });
 

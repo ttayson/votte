@@ -24,7 +24,22 @@ const { userLogin } = require("../helpers/userLogin");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.render("guest/entrar", { layout: "basic" });
+  const difference = res.locals.StartTime - +new Date();
+  const difference2 = res.locals.EndTime - +new Date();
+  if (difference <= 0 && difference2 > 0) {
+    res.render("guest/entrar", {
+      layout: "basic",
+      EndTime: res.locals.EndTime,
+      StartTime: res.locals.StartTime,
+    });
+  } else if (difference <= 0 && difference2 < 0) {
+    res.redirect("/entrar");
+  } else {
+    res.render("guest/contagem", {
+      layout: "basic",
+      StartTime: res.locals.StartTime,
+    });
+  }
 });
 
 router.get("/login", (req, res) => {
@@ -42,11 +57,29 @@ router.post("/login", (req, res, next) => {
 });
 
 router.get("/entrar", (req, res) => {
-  res.render("guest/entrar", {
-    layout: "basic",
-  });
+  const difference = res.locals.EndTime - +new Date();
+  const difference2 = res.locals.StartTime - +new Date();
+  if (difference > 0 && difference2 < 0) {
+    res.render("guest/entrar", {
+      layout: "basic",
+      EndTime: res.locals.EndTime,
+    });
+  } else if (difference > 0 && difference2 > 0) {
+    res.redirect("/");
+  } else {
+    res.render("guest/EndTime", {
+      layout: "basic",
+    });
+  }
 });
 router.post("/entrar", (req, res) => {
+  const difference = res.locals.EndTime - +new Date();
+  const difference2 = res.locals.StartTime - +new Date();
+  if (difference <= 0 || difference2 >= 0) {
+    res.json({ erro: "inexistente" });
+    return;
+  }
+
   Eleitor.findOne({ matricula: req.body[0].mat }).then((eleitor) => {
     if (eleitor) {
       Voto.find({ eleitor: eleitor._id }) //check geral, para elição única
@@ -76,6 +109,13 @@ router.post("/entrar", (req, res) => {
 });
 
 router.get("/voto/:local/:mat", (req, res) => {
+  const difference = res.locals.EndTime - +new Date();
+  const difference2 = res.locals.StartTime - +new Date();
+  if (difference <= 0 || difference2 >= 0) {
+    res.redirect("/");
+    return;
+  }
+
   Eleicao.find({
     $and: [
       { status: 1 },
@@ -96,17 +136,25 @@ router.get("/voto/:local/:mat", (req, res) => {
         res.render("guest/voto1", {
           layout: "basic",
           eleicao: eleicao,
+          EndTime: res.locals.EndTime,
         });
       } else {
         res.render("guest/voto", {
           layout: "basic",
           eleicao: eleicao,
+          EndTime: res.locals.EndTime,
         });
       }
     });
 });
 
-router.post("/teste", async (req, res) => {
+router.post("/votte", async (req, res) => {
+  const difference = res.locals.EndTime - +new Date();
+  const difference2 = res.locals.StartTime - +new Date();
+  if (difference <= 0 || difference2 >= 0) {
+    res.json({ erro: "inexistente" });
+    return;
+  }
   await Eleitor.findOne({ matricula: req.body[1] })
     .then(async (eleitor) => {
       if (eleitor) {
@@ -240,7 +288,11 @@ router.post("/teste", async (req, res) => {
 
 router.get("/resultado", (req, res) => {
   Resultado.find({ status: 3 }).then((resultado) => {
-    res.render("guest/resultado", { layout: "basic", resultado: resultado });
+    if (resultado.length == 7) {
+      res.render("guest/resultado", { layout: "basic", resultado: resultado });
+    } else {
+      res.render("guest/resultado", { layout: "basic" });
+    }
   });
 });
 
