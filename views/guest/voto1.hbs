@@ -60,7 +60,7 @@
     title: 'Confirme dados',
     html:
       ''+Matabel+'<input id="swal-input1" placeholder="Matrícula" '+ MatParams + 'class="swal2-input" style="margin-top: 0; max-width: 100%;" type="number">' +
-      '<p style="text-align: left;">Senha</p><input id="swal-input2" placeholder="Senha" class="swal2-input" style="margin-top: 0;" type="password">',
+      '<p style="text-align: left;"><b>Senha</b></p><input id="swal-input2" placeholder="Senha" class="swal2-input" style="margin-top: 0;" type="password">',
     focusConfirm: true,
     preConfirm: () => {
       return [
@@ -88,6 +88,16 @@
                   text: 'Dados não conferem!',
                   showConfirmButton: true,
                 })
+
+        }else if (retorno.ok == "dadosincorretos"){
+               await Swal.fire({
+                  icon: 'error',
+                  title: 'Dados Incorretos',
+                  text: 'Tente Novamente',
+                  showConfirmButton: true,
+                })
+
+             window.location.href = "/entrar/"
 
         }else if (retorno.ok == "valido"){
                await Swal.fire({
@@ -120,14 +130,14 @@
                 })
 
         }else if (retorno.erro == "localerro"){
-                Swal.fire({
+               await Swal.fire({
                   icon: 'error',
                   title: 'Local de votação Inválido',
                   text: '',
                   showConfirmButton: true,
                   footer: '<a href=/entrar/ >Corrigir local </a>'
-
                 })
+                window.location.href = "/entrar/"
          }
         }
       })

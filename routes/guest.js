@@ -75,7 +75,7 @@ router.post("/entrar", (req, res) => {
   //   });
 });
 
-router.get("/voto/:local/:mat?", (req, res) => {
+router.get("/voto/:local/:mat", (req, res) => {
   Eleicao.find({
     $and: [
       { status: 1 },
@@ -113,31 +113,39 @@ router.post("/teste", async (req, res) => {
         // Traca de Local desativada
         var error = [];
         for (i in req.body[0]) {
-          await Eleicao.findOne({
-            _id: req.body[0][i].name,
-          }).then((checkLocal) => {
-            if (req.body[0].length == 3) {
-              if (
-                eleitor.local != "roe" &&
-                eleitor.local != "rse" &&
-                eleitor.local != "rsc" &&
-                eleitor.local != "rao"
-              ) {
-                console.log("local correto 2");
+          await Eleicao.findOne()
+            .and([
+              { _id: req.body[0][i].name },
+              { chapa: req.body[0][i].value },
+            ])
+            .then((checkLocal) => {
+              if (checkLocal) {
+                if (req.body[0].length == 3) {
+                  if (
+                    eleitor.local != "roe" &&
+                    eleitor.local != "rse" &&
+                    eleitor.local != "rsc" &&
+                    eleitor.local != "rao"
+                  ) {
+                    console.log("local correto 2");
+                  } else {
+                    error.push({ error: "erro" });
+                  }
+                } else {
+                  if (
+                    checkLocal.local == eleitor.local ||
+                    checkLocal.local == "geral"
+                  ) {
+                    console.log("local correto");
+                  } else {
+                    error.push({ error: "erro" });
+                  }
+                }
               } else {
+                console.log("dados Incorretos");
                 error.push({ error: "erro" });
               }
-            } else {
-              if (
-                checkLocal.local == eleitor.local ||
-                checkLocal.local == "geral"
-              ) {
-                console.log("local correto");
-              } else {
-                error.push({ error: "erro" });
-              }
-            }
-          });
+            });
         }
         if (error.length > 0) {
           res.json({ erro: "localerro" });
@@ -151,32 +159,40 @@ router.post("/teste", async (req, res) => {
           var novoVoto;
           for (item in req.body[0]) {
             countVotoValid = 0;
-            await Eleicao.findOne({ _id: req.body[0][item].name }).then(
-              async (eleicao) => {
-                await Voto.findOne()
-                  .and([{ eleitor: eleitor._id }, { eleicao: eleicao._id }])
-                  .then(async (voto) => {
-                    if (voto) {
-                      countCheckVoto += 1;
-                      return;
-                    } else {
-                      if (eleicao.status == 1) {
-                        countVotoValid += 1;
-                        novoVoto = {
-                          ip: req.ip,
-                          chapa: req.body[0][item].value,
-                          eleitor: eleitor._id,
-                          eleicao: eleicao._id,
-                          local: eleitor.local,
-                          valido: 1,
-                        };
+
+            await Eleicao.findOne()
+              .and([
+                { _id: req.body[0][item].name },
+                { chapa: req.body[0][item].value },
+              ])
+              .then(async (eleicao) => {
+                if (eleicao) {
+                  await Voto.findOne()
+                    .and([{ eleitor: eleitor._id }, { eleicao: eleicao._id }])
+                    .then(async (voto) => {
+                      if (voto) {
+                        countCheckVoto += 1;
+                        return;
                       } else {
-                        res.json({ erro: "inexistente" });
+                        if (eleicao.status == 1) {
+                          countVotoValid += 1;
+                          novoVoto = {
+                            ip: req.ip,
+                            chapa: req.body[0][item].value,
+                            eleitor: eleitor._id,
+                            eleicao: eleicao._id,
+                            local: eleitor.local,
+                            valido: 1,
+                          };
+                        } else {
+                          res.json({ erro: "inexistente" });
+                        }
                       }
-                    }
-                  });
-              }
-            );
+                    });
+                } else {
+                  res.json({ erro: "dadosincorretos" });
+                }
+              });
             if (countVotoValid != 0) {
               await new Voto(novoVoto)
                 .save()

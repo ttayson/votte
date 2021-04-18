@@ -594,9 +594,9 @@ router.post("/eleitor", UploadCSV.single("file"), userLogin, (req, res) => {
         cpf: eleitor[item]["cpf"],
         matricula: eleitor[item]["matricula"],
         telefone: eleitor[item]["telefone"],
-        local: eleitor[item]["local"].toLowerCase(),
+        local: eleitor[item]["local"],
         senha: eleitor[item]["senha"],
-        situacao: eleitor[item]["situacao"].toLowerCase(),
+        situacao: eleitor[item]["situacao"],
         nascimento: eleitor[item]["nascimento"],
       };
 
