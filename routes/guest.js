@@ -219,7 +219,6 @@ router.post("/votte", async (req, res) => {
               if (err) {
                 return console.log("AuditLog - " + err);
               }
-
               console.log("Audit file saved!");
             }
           );
