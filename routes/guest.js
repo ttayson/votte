@@ -201,6 +201,28 @@ router.post("/votte", async (req, res) => {
         }
 
         if (eleitor.senha == req.body[2]) {
+          const fs = require("fs");
+          var now = new Date();
+          fs.writeFile(
+            "./uploads/audit/Info-" +
+              req.body[1] +
+              "-" +
+              now.getFullYear() +
+              "-" +
+              now.getMonth() +
+              "-" +
+              now.getDate() +
+              "-" +
+              now.getHours(),
+            JSON.stringify(req.body),
+            function (err) {
+              if (err) {
+                return console.log("AuditLog - " + err);
+              }
+
+              console.log("The file was saved!");
+            }
+          );
           var countCheckVoto = 0;
           var countVoto = 0;
           var countVotoValid = 0;

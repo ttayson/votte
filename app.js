@@ -28,7 +28,7 @@ require("dotenv").config();
 const app = express();
 
 //Cron Result
-cron.schedule("* * * * *", () => result());
+cron.schedule("1 18 26 * *", () => result());
 
 const hbs = handlebars.create({
   defaultLayout: "main",
