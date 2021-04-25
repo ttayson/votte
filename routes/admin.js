@@ -32,7 +32,6 @@ const { result } = require("../helpers/result");
 const router = express.Router();
 
 router.get("/", userLogin, async (req, res) => {
-  await result();
   Resultado.find({ status: 1 }).then((resultado) => {
     res.render("admin/index", { resultado: resultado });
   });

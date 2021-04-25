@@ -11,6 +11,8 @@ module.exports = {
     const Voto = mongoose.model("voto");
     const Resultado = mongoose.model("resultado");
 
+    console.log("Resultado");
+
     Eleicao.find()
       .or([{ status: 1 }, { status: 2 }, { status: 3 }])
       .populate("chapa")
@@ -23,7 +25,7 @@ module.exports = {
 
         for (item in eleicao) {
           await Resultado.find({ eleicao: eleicao[item]._id }).then(
-            (result) => {
+            async (result) => {
               const resultado = {
                 nome: eleicao[item].nome,
                 eleicao: eleicao[item]._id,
@@ -31,7 +33,7 @@ module.exports = {
                 status: 1,
               };
 
-              Resultado(resultado)
+              await Resultado(resultado)
                 .save()
                 .then(() => {
                   // console.log("Resultado cadastrada com Sucesso");
@@ -42,29 +44,29 @@ module.exports = {
             }
           );
 
-          Voto.find()
-            .and([{ eleicao: eleicao[item]._id }, { valido: 2 }])
-            .then((brancos) => {
-              Resultado.updateOne(
-                { eleicao: eleicao[item]._id },
-                { $set: { brancos: brancos.length } }
-              ).then(() => {
-                // console.log("Bracos Atualizados");
-              });
-            });
+          // Voto.find()
+          //   .and([{ eleicao: eleicao[item]._id }, { valido: 2 }])
+          //   .then((brancos) => {
+          //     Resultado.updateOne(
+          //       { eleicao: eleicao[item]._id },
+          //       { $set: { brancos: brancos.length } }
+          //     ).then(() => {
+          //       // console.log("Bracos Atualizados");
+          //     });
+          //   });
 
-          Voto.find()
-            .and([{ eleicao: eleicao[item]._id }, { valido: 3 }])
-            .then((nulos) => {
-              Resultado.updateOne(
-                { eleicao: eleicao[item]._id },
-                { $set: { nulos: nulos.length } }
-              ).then(() => {
-                // console.log("Nulos Atualizados");
-              });
-            });
+          // Voto.find()
+          //   .and([{ eleicao: eleicao[item]._id }, { valido: 3 }])
+          //   .then((nulos) => {
+          //     Resultado.updateOne(
+          //       { eleicao: eleicao[item]._id },
+          //       { $set: { nulos: nulos.length } }
+          //     ).then(() => {
+          //       // console.log("Nulos Atualizados");
+          //     });
+          //   });
 
-          Resultado.updateOne(
+          await Resultado.updateOne(
             { eleicao: eleicao[item]._id },
             { $pull: { votos: { voto: { $gte: 0 } } } }
           ).then(() => {
